@@ -1,12 +1,16 @@
 import type { GlobalConfig } from 'payload'
 
 import { notifyAfterChange } from '../lib/notify-site'
+import { sitePreviewUrl } from '../lib/preview-url'
 
 /** Контракт: cms.streams — прямые эфиры и записи (YouTube/Vimeo). */
 export const Streams: GlobalConfig = {
   slug: 'streams',
   label: 'Эфиры',
   versions: { drafts: true },
+  admin: {
+    preview: sitePreviewUrl('/education/webinars'),
+  },
   hooks: {
     afterChange: [notifyAfterChange(['cms:streams'])],
   },

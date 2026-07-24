@@ -13,6 +13,8 @@
 - **Инвалидация кеша сайта** — при публикации хук `afterChange` шлёт подписанный вебхук `POST {SITE_WEBHOOK_URL}` (`X-Signature: sha256=<hex HMAC>`, тело `{event_id, occurred_at, tags}`). Сохранение черновика вебхук не шлёт.
 - **Локализация** — `ru` (основная) и `en`, fallback на `ru`; совпадает с локалями сайта.
 - `X-Content-Version` в ответах = `updatedAt` источника (ADR-020).
+- **Preview** — кнопка Preview в админке ведёт на `{SITE_URL}/api/preview?secret&path`: сайт ставит draftMode-куку и запрашивает CMS с `draft=true` — редактор видит черновик до публикации, обычные посетители — нет. Сохранение черновика вебхук не шлёт.
+- **Контрактный тест** — `node scripts/contract-check.mjs` сверяет живые ответы со всеми фикстурами (datetime — по моменту времени); гоняется в CI против production-сборки.
 
 ## Запуск
 
@@ -63,3 +65,4 @@ src/
 | `pnpm generate:types` | `src/payload-types.ts` из конфига |
 | `pnpm generate:importmap` | importMap админки |
 | `pnpm typecheck` | tsc --noEmit |
+| `node scripts/contract-check.mjs` | Контрактный тест против фикстур (нужна запущенная CMS) |

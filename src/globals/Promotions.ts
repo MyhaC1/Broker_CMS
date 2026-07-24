@@ -1,12 +1,16 @@
 import type { GlobalConfig } from 'payload'
 
 import { notifyAfterChange } from '../lib/notify-site'
+import { sitePreviewUrl } from '../lib/preview-url'
 
 /** Контракт: cms.promotions — акции и бонусы. */
 export const Promotions: GlobalConfig = {
   slug: 'promotions',
   label: 'Акции',
   versions: { drafts: true },
+  admin: {
+    preview: sitePreviewUrl('/promotions'),
+  },
   hooks: {
     afterChange: [notifyAfterChange(['cms:promotions'])],
   },

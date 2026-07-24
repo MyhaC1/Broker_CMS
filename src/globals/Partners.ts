@@ -1,12 +1,16 @@
 import type { GlobalConfig } from 'payload'
 
 import { notifyAfterChange } from '../lib/notify-site'
+import { sitePreviewUrl } from '../lib/preview-url'
 
 /** Контракт: cms.partners — партнёрская программа (модели, уровни, шаги). */
 export const Partners: GlobalConfig = {
   slug: 'partners',
   label: 'Партнёрам',
   versions: { drafts: true },
+  admin: {
+    preview: sitePreviewUrl('/partners'),
+  },
   hooks: {
     afterChange: [notifyAfterChange(['cms:partners'])],
   },

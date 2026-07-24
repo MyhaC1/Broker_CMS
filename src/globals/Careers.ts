@@ -1,12 +1,16 @@
 import type { GlobalConfig } from 'payload'
 
 import { notifyAfterChange } from '../lib/notify-site'
+import { sitePreviewUrl } from '../lib/preview-url'
 
 /** Контракт: cms.careers — преимущества и вакансии. */
 export const Careers: GlobalConfig = {
   slug: 'careers',
   label: 'Карьера',
   versions: { drafts: true },
+  admin: {
+    preview: sitePreviewUrl('/company/careers'),
+  },
   hooks: {
     afterChange: [notifyAfterChange(['cms:careers'])],
   },

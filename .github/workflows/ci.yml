@@ -1,0 +1,68 @@
+# CI CMS-сервиса: typecheck → production-сборка → seed → контрактный тест
+# против эталонных фикстур platform-contracts (contract/).
+# Версия pnpm — ТОЛЬКО из поля packageManager (грабли B-008 сайта).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: cms
+          POSTGRES_PASSWORD: cms
+          POSTGRES_DB: broker_cms
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U cms -d broker_cms"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://cms:cms@localhost:5432/broker_cms
+      PAYLOAD_SECRET: ci-payload-secret-0123456789abcdef0123456789abcdef
+      CMS_API_KEY: ci-api-key
+      CMS_PUBLIC_URL: http://localhost:3001
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Seed (dev-режим применяет схему БД + контент из фикстур)
+        run: pnpm seed
+
+      - name: Build (production)
+        run: pnpm build
+
+      - name: Start CMS and wait for health
+        run: |
+          pnpm start &
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:3001/v1/health && exit 0
+            sleep 2
+          done
+          echo "CMS did not become healthy" && exit 1
+
+      - name: Contract check (все ресурсы × ru/en против фикстур)
+        run: node scripts/contract-check.mjs
+        env:
+          CMS_URL: http://localhost:3001

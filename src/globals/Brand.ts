@@ -1,12 +1,16 @@
 import type { GlobalConfig } from 'payload'
 
 import { notifyAfterChange } from '../lib/notify-site'
+import { sitePreviewUrl } from '../lib/preview-url'
 
 /** Контракт: cms.brand — имя, логотип, favicon, акцентный цвет, соцсети. */
 export const Brand: GlobalConfig = {
   slug: 'brand',
   label: 'Бренд',
   versions: { drafts: true },
+  admin: {
+    preview: sitePreviewUrl('/'),
+  },
   hooks: {
     afterChange: [notifyAfterChange(['cms:brand'])],
   },

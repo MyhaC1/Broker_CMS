@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { notifyAfterChange } from '../lib/notify-site'
+import { sitePreviewUrlFor } from '../lib/preview-url'
 
 /**
  * Контракт: cms.articles (список с пагинацией) + cms.article (деталка по slug).
@@ -13,6 +14,7 @@ export const Articles: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'publishedAt', '_status'],
+    preview: sitePreviewUrlFor((doc) => `/blog/${doc.slug ?? ''}`),
   },
   versions: { drafts: true },
   hooks: {

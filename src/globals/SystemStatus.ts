@@ -1,12 +1,16 @@
 import type { GlobalConfig } from 'payload'
 
 import { notifyAfterChange } from '../lib/notify-site'
+import { sitePreviewUrl } from '../lib/preview-url'
 
 /** Контракт: cms.system-status — статусы сервисов и журнал инцидентов. */
 export const SystemStatus: GlobalConfig = {
   slug: 'system-status',
   label: 'Статус сервисов',
   versions: { drafts: true },
+  admin: {
+    preview: sitePreviewUrl('/status'),
+  },
   hooks: {
     afterChange: [notifyAfterChange(['cms:system-status'])],
   },

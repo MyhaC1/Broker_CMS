@@ -1,12 +1,16 @@
 import type { GlobalConfig } from 'payload'
 
 import { notifyAfterChange } from '../lib/notify-site'
+import { sitePreviewUrl } from '../lib/preview-url'
 
 /** Контракт: cms.legal — правовые документы (privacy, terms, risk-disclosure…). */
 export const Legal: GlobalConfig = {
   slug: 'legal',
   label: 'Правовые документы',
   versions: { drafts: true },
+  admin: {
+    preview: sitePreviewUrl('/legal/privacy'),
+  },
   hooks: {
     afterChange: [notifyAfterChange(['cms:legal'])],
   },

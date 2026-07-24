@@ -1,12 +1,16 @@
 import type { GlobalConfig } from 'payload'
 
 import { notifyAfterChange } from '../lib/notify-site'
+import { sitePreviewUrl } from '../lib/preview-url'
 
 /** Контракт: cms.accounts — типы счетов с тарифами (питает и калькулятор комиссий). */
 export const Accounts: GlobalConfig = {
   slug: 'accounts',
   label: 'Типы счетов',
   versions: { drafts: true },
+  admin: {
+    preview: sitePreviewUrl('/accounts'),
+  },
   hooks: {
     afterChange: [notifyAfterChange(['cms:accounts'])],
   },

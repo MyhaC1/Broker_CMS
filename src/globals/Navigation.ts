@@ -1,12 +1,16 @@
 import type { GlobalConfig } from 'payload'
 
 import { notifyAfterChange } from '../lib/notify-site'
+import { sitePreviewUrl } from '../lib/preview-url'
 
 /** Контракт: cms.navigation — меню шапки и колонки футера с дисклеймером. */
 export const Navigation: GlobalConfig = {
   slug: 'navigation',
   label: 'Навигация',
   versions: { drafts: true },
+  admin: {
+    preview: sitePreviewUrl('/'),
+  },
   hooks: {
     afterChange: [notifyAfterChange(['cms:navigation'])],
   },

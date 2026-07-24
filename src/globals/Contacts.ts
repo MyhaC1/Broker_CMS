@@ -1,12 +1,16 @@
 import type { GlobalConfig } from 'payload'
 
 import { notifyAfterChange } from '../lib/notify-site'
+import { sitePreviewUrl } from '../lib/preview-url'
 
 /** Контракт: cms.contacts — каналы связи и офисы. */
 export const Contacts: GlobalConfig = {
   slug: 'contacts',
   label: 'Контакты',
   versions: { drafts: true },
+  admin: {
+    preview: sitePreviewUrl('/company/contacts'),
+  },
   hooks: {
     afterChange: [notifyAfterChange(['cms:contacts'])],
   },

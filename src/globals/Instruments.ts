@@ -1,12 +1,16 @@
 import type { GlobalConfig } from 'payload'
 
 import { notifyAfterChange } from '../lib/notify-site'
+import { sitePreviewUrl } from '../lib/preview-url'
 
 /** Контракт: cms.instruments — торговые инструменты (allow-list для WS-подписок сайта). */
 export const Instruments: GlobalConfig = {
   slug: 'instruments',
   label: 'Инструменты',
   versions: { drafts: true },
+  admin: {
+    preview: sitePreviewUrl('/instruments'),
+  },
   hooks: {
     afterChange: [notifyAfterChange(['cms:instruments'])],
   },

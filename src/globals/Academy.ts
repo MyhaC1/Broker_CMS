@@ -1,12 +1,16 @@
 import type { GlobalConfig } from 'payload'
 
 import { notifyAfterChange } from '../lib/notify-site'
+import { sitePreviewUrl } from '../lib/preview-url'
 
 /** Контракт: cms.academy — обучение: статьи, вебинары, глоссарий. */
 export const Academy: GlobalConfig = {
   slug: 'academy',
   label: 'Обучение',
   versions: { drafts: true },
+  admin: {
+    preview: sitePreviewUrl('/education'),
+  },
   hooks: {
     afterChange: [notifyAfterChange(['cms:academy'])],
   },

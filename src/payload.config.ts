@@ -5,11 +5,22 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
-import { Users } from './collections/Users'
+import { Articles } from './collections/Articles'
 import { Media } from './collections/Media'
+import { Users } from './collections/Users'
+import { Academy } from './globals/Academy'
+import { Accounts } from './globals/Accounts'
 import { Brand } from './globals/Brand'
-import { Navigation } from './globals/Navigation'
+import { Careers } from './globals/Careers'
+import { Contacts } from './globals/Contacts'
 import { Faq } from './globals/Faq'
+import { Instruments } from './globals/Instruments'
+import { Legal } from './globals/Legal'
+import { Navigation } from './globals/Navigation'
+import { Partners } from './globals/Partners'
+import { Promotions } from './globals/Promotions'
+import { Streams } from './globals/Streams'
+import { SystemStatus } from './globals/SystemStatus'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -21,8 +32,22 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media],
-  globals: [Brand, Navigation, Faq],
+  collections: [Users, Media, Articles],
+  globals: [
+    Brand,
+    Navigation,
+    Faq,
+    Instruments,
+    Accounts,
+    Promotions,
+    Partners,
+    Academy,
+    Streams,
+    Contacts,
+    Careers,
+    Legal,
+    SystemStatus,
+  ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

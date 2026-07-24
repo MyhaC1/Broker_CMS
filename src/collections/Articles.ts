@@ -1,0 +1,37 @@
+import type { CollectionConfig } from 'payload'
+
+import { notifyAfterChange } from '../lib/notify-site'
+
+/**
+ * Контракт: cms.articles (список с пагинацией) + cms.article (деталка по slug).
+ * Единственная коллекция контента: у статей есть жизненный цикл и адресуемость
+ * по slug — глобалом их моделировать нельзя.
+ */
+export const Articles: CollectionConfig = {
+  slug: 'articles',
+  labels: { singular: 'Статья', plural: 'Статьи' },
+  admin: {
+    useAsTitle: 'title',
+    defaultColumns: ['title', 'category', 'publishedAt', '_status'],
+  },
+  versions: { drafts: true },
+  hooks: {
+    afterChange: [notifyAfterChange(['cms:articles'])],
+  },
+  fields: [
+    { name: 'slug', type: 'text', required: true, unique: true, index: true, label: 'Slug' },
+    { name: 'title', type: 'text', required: true, localized: true, label: 'Заголовок' },
+    { name: 'excerpt', type: 'textarea', required: true, localized: true, label: 'Анонс' },
+    { name: 'category', type: 'text', required: true, label: 'Категория (economy, forex…)' },
+    { name: 'source', type: 'text', required: true, localized: true, label: 'Источник' },
+    {
+      name: 'publishedAt',
+      type: 'date',
+      required: true,
+      label: 'Дата публикации',
+      admin: { date: { pickerAppearance: 'dayAndTime' } },
+    },
+    { name: 'readingMinutes', type: 'number', required: true, min: 1, label: 'Минут чтения' },
+    { name: 'bodyMarkdown', type: 'textarea', required: true, localized: true, label: 'Текст (Markdown)' },
+  ],
+}

@@ -1,3 +1,5 @@
+import path from 'node:path'
+
 import type { CollectionConfig } from 'payload'
 
 export const Media: CollectionConfig = {
@@ -13,5 +15,9 @@ export const Media: CollectionConfig = {
       label: 'Альтернативный текст',
     },
   ],
-  upload: true,
+  upload: {
+    // Явный абсолютный путь: в standalone-образе конфиг бандлится,
+    // относительные пути от файла конфига становятся непредсказуемыми
+    staticDir: path.resolve(process.cwd(), 'media'),
+  },
 }

@@ -7,6 +7,8 @@ const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 
 const nextConfig: NextConfig = {
+  // Для Docker-образа (в dev не включаем — next start без standalone)
+  ...(process.env.BUILD_STANDALONE === '1' ? { output: 'standalone' as const } : {}),
   images: {
     localPatterns: [
       {

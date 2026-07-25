@@ -7,7 +7,7 @@ import { sitePreviewUrl } from '../lib/preview-url'
 export const Brand: GlobalConfig = {
   slug: 'brand',
   label: 'Бренд',
-  versions: { drafts: true },
+  versions: { drafts: { autosave: { interval: 1000 } } },
   admin: {
     preview: sitePreviewUrl('/'),
   },
@@ -48,6 +48,8 @@ export const Brand: GlobalConfig = {
       name: 'socials',
       type: 'array',
       label: 'Социальные сети',
+      labels: { singular: 'Соцсеть', plural: 'Соцсети' },
+      admin: { components: { RowLabel: '/components/RowLabel#ArrayRowLabel' } },
       fields: [
         { name: 'name', type: 'text', required: true, label: 'Название (telegram, youtube…)' },
         { name: 'url', type: 'text', required: true, label: 'Ссылка' },

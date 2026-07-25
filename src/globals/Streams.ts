@@ -7,7 +7,7 @@ import { sitePreviewUrl } from '../lib/preview-url'
 export const Streams: GlobalConfig = {
   slug: 'streams',
   label: 'Эфиры',
-  versions: { drafts: true },
+  versions: { drafts: { autosave: { interval: 1000 } } },
   admin: {
     preview: sitePreviewUrl('/education/webinars'),
   },
@@ -20,6 +20,8 @@ export const Streams: GlobalConfig = {
       type: 'array',
       localized: true,
       label: 'Эфиры',
+      labels: { singular: 'Эфир', plural: 'Эфиры' },
+      admin: { components: { RowLabel: '/components/RowLabel#ArrayRowLabel' } },
       fields: [
         {
           name: 'provider',

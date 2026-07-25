@@ -7,7 +7,7 @@ import { sitePreviewUrl } from '../lib/preview-url'
 export const Contacts: GlobalConfig = {
   slug: 'contacts',
   label: 'Контакты',
-  versions: { drafts: true },
+  versions: { drafts: { autosave: { interval: 1000 } } },
   admin: {
     preview: sitePreviewUrl('/company/contacts'),
   },
@@ -20,6 +20,8 @@ export const Contacts: GlobalConfig = {
       type: 'array',
       localized: true,
       label: 'Каналы связи',
+      labels: { singular: 'Канал', plural: 'Каналы' },
+      admin: { components: { RowLabel: '/components/RowLabel#ArrayRowLabel' } },
       fields: [
         { name: 'title', type: 'text', required: true, label: 'Канал' },
         { name: 'value', type: 'text', required: true, label: 'Значение (email, телефон…)' },
@@ -31,6 +33,8 @@ export const Contacts: GlobalConfig = {
       type: 'array',
       localized: true,
       label: 'Офисы',
+      labels: { singular: 'Офис', plural: 'Офисы' },
+      admin: { components: { RowLabel: '/components/RowLabel#ArrayRowLabel' } },
       fields: [
         { name: 'city', type: 'text', required: true, label: 'Город' },
         { name: 'country', type: 'text', required: true, label: 'Страна' },

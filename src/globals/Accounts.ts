@@ -7,7 +7,7 @@ import { sitePreviewUrl } from '../lib/preview-url'
 export const Accounts: GlobalConfig = {
   slug: 'accounts',
   label: 'Типы счетов',
-  versions: { drafts: true },
+  versions: { drafts: { autosave: { interval: 1000 } } },
   admin: {
     preview: sitePreviewUrl('/accounts'),
   },
@@ -20,6 +20,8 @@ export const Accounts: GlobalConfig = {
       type: 'array',
       localized: true,
       label: 'Тарифные планы',
+      labels: { singular: 'Тарифный план', plural: 'Тарифные планы' },
+      admin: { components: { RowLabel: '/components/RowLabel#ArrayRowLabel' } },
       fields: [
         // 'id' зарезервирован Payload для строк массива — контрактный id хранится как planId
         { name: 'planId', type: 'text', required: true, label: 'ID плана (standard, pro…)' },
@@ -31,6 +33,8 @@ export const Accounts: GlobalConfig = {
           name: 'features',
           type: 'array',
           label: 'Характеристики',
+          labels: { singular: 'Характеристика', plural: 'Характеристики' },
+          admin: { components: { RowLabel: '/components/RowLabel#ArrayRowLabel' } },
           fields: [
             { name: 'label', type: 'text', required: true, label: 'Параметр' },
             { name: 'value', type: 'text', required: true, label: 'Значение' },

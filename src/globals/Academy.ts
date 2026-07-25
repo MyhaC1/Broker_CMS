@@ -7,7 +7,7 @@ import { sitePreviewUrl } from '../lib/preview-url'
 export const Academy: GlobalConfig = {
   slug: 'academy',
   label: 'Обучение',
-  versions: { drafts: true },
+  versions: { drafts: { autosave: { interval: 1000 } } },
   admin: {
     preview: sitePreviewUrl('/education'),
   },
@@ -20,6 +20,8 @@ export const Academy: GlobalConfig = {
       type: 'array',
       localized: true,
       label: 'Обучающие статьи',
+      labels: { singular: 'Статья', plural: 'Статьи' },
+      admin: { components: { RowLabel: '/components/RowLabel#ArrayRowLabel' } },
       fields: [
         { name: 'slug', type: 'text', required: true, label: 'Slug' },
         { name: 'title', type: 'text', required: true, label: 'Заголовок' },
@@ -40,6 +42,8 @@ export const Academy: GlobalConfig = {
       type: 'array',
       localized: true,
       label: 'Вебинары',
+      labels: { singular: 'Вебинар', plural: 'Вебинары' },
+      admin: { components: { RowLabel: '/components/RowLabel#ArrayRowLabel' } },
       fields: [
         { name: 'webinarId', type: 'text', required: true, label: 'ID (web-1…)' },
         { name: 'title', type: 'text', required: true, label: 'Тема' },
@@ -56,6 +60,8 @@ export const Academy: GlobalConfig = {
       type: 'array',
       localized: true,
       label: 'Глоссарий',
+      labels: { singular: 'Термин', plural: 'Термины' },
+      admin: { components: { RowLabel: '/components/RowLabel#ArrayRowLabel' } },
       fields: [
         { name: 'term', type: 'text', required: true, label: 'Термин' },
         { name: 'definition', type: 'textarea', required: true, label: 'Определение' },

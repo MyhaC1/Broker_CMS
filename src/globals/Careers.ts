@@ -7,7 +7,7 @@ import { sitePreviewUrl } from '../lib/preview-url'
 export const Careers: GlobalConfig = {
   slug: 'careers',
   label: 'Карьера',
-  versions: { drafts: true },
+  versions: { drafts: { autosave: { interval: 1000 } } },
   admin: {
     preview: sitePreviewUrl('/company/careers'),
   },
@@ -20,6 +20,8 @@ export const Careers: GlobalConfig = {
       type: 'array',
       localized: true,
       label: 'Преимущества',
+      labels: { singular: 'Преимущество', plural: 'Преимущества' },
+      admin: { components: { RowLabel: '/components/RowLabel#ArrayRowLabel' } },
       fields: [
         { name: 'title', type: 'text', required: true, label: 'Заголовок' },
         { name: 'text', type: 'text', required: true, label: 'Текст' },
@@ -30,6 +32,8 @@ export const Careers: GlobalConfig = {
       type: 'array',
       localized: true,
       label: 'Вакансии',
+      labels: { singular: 'Вакансия', plural: 'Вакансии' },
+      admin: { components: { RowLabel: '/components/RowLabel#ArrayRowLabel' } },
       fields: [
         { name: 'title', type: 'text', required: true, label: 'Должность' },
         { name: 'department', type: 'text', required: true, label: 'Отдел' },

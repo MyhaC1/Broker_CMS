@@ -7,7 +7,7 @@ import { sitePreviewUrl } from '../lib/preview-url'
 export const Promotions: GlobalConfig = {
   slug: 'promotions',
   label: 'Акции',
-  versions: { drafts: true },
+  versions: { drafts: { autosave: { interval: 1000 } } },
   admin: {
     preview: sitePreviewUrl('/promotions'),
   },
@@ -20,6 +20,8 @@ export const Promotions: GlobalConfig = {
       type: 'array',
       localized: true,
       label: 'Акции',
+      labels: { singular: 'Акция', plural: 'Акции' },
+      admin: { components: { RowLabel: '/components/RowLabel#ArrayRowLabel' } },
       fields: [
         { name: 'promoId', type: 'text', required: true, label: 'ID акции (promo-1…)' },
         { name: 'badge', type: 'text', required: true, label: 'Бейдж' },

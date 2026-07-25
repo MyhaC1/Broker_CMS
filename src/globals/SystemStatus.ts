@@ -7,7 +7,7 @@ import { sitePreviewUrl } from '../lib/preview-url'
 export const SystemStatus: GlobalConfig = {
   slug: 'system-status',
   label: 'Статус сервисов',
-  versions: { drafts: true },
+  versions: { drafts: { autosave: { interval: 1000 } } },
   admin: {
     preview: sitePreviewUrl('/status'),
   },
@@ -20,6 +20,8 @@ export const SystemStatus: GlobalConfig = {
       type: 'array',
       localized: true,
       label: 'Сервисы',
+      labels: { singular: 'Сервис', plural: 'Сервисы' },
+      admin: { components: { RowLabel: '/components/RowLabel#ArrayRowLabel' } },
       fields: [
         { name: 'serviceId', type: 'text', required: true, label: 'ID (svc-1, quotes-ws…)' },
         { name: 'name', type: 'text', required: true, label: 'Название' },
@@ -40,6 +42,8 @@ export const SystemStatus: GlobalConfig = {
       type: 'array',
       localized: true,
       label: 'Инциденты',
+      labels: { singular: 'Инцидент', plural: 'Инциденты' },
+      admin: { components: { RowLabel: '/components/RowLabel#ArrayRowLabel' } },
       fields: [
         { name: 'date', type: 'text', required: true, label: 'Дата (YYYY-MM-DD)' },
         { name: 'title', type: 'text', required: true, label: 'Заголовок' },

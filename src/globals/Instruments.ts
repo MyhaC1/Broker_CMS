@@ -7,7 +7,7 @@ import { sitePreviewUrl } from '../lib/preview-url'
 export const Instruments: GlobalConfig = {
   slug: 'instruments',
   label: 'Инструменты',
-  versions: { drafts: true },
+  versions: { drafts: { autosave: { interval: 1000 } } },
   admin: {
     preview: sitePreviewUrl('/instruments'),
   },
@@ -20,6 +20,8 @@ export const Instruments: GlobalConfig = {
       type: 'array',
       localized: true,
       label: 'Инструменты',
+      labels: { singular: 'Инструмент', plural: 'Инструменты' },
+      admin: { components: { RowLabel: '/components/RowLabel#ArrayRowLabel' } },
       fields: [
         { name: 'symbol', type: 'text', required: true, label: 'Символ (EURUSD…)' },
         { name: 'name', type: 'text', required: true, label: 'Название' },

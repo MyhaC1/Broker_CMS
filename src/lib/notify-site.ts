@@ -43,14 +43,20 @@ export async function notifySite(tags: string[]): Promise<void> {
 }
 
 /**
- * Хук afterChange для глобалов/коллекций: шлёт вебхук только при публикации
+ * Хук afterChange для глобалов/коллекций: шлёт вебхук при публикации
  * (сохранение черновика не должно инвалидировать прод-кеш сайта).
+ *
+ * Особый случай — откат версии (POST …/versions/:id): Payload меняет
+ * published-контент, но в хук doc приходит со статусом draft, из-за чего
+ * вебхук молча пропускался и сайт не узнавал об откате (B-012).
+ * Восстановление распознаём по URL запроса и шлём вебхук всегда.
  */
 export const notifyAfterChange =
   (tags: string[]) =>
-  ({ doc }: { doc: Record<string, unknown> }) => {
+  ({ doc, req }: { doc: Record<string, unknown>; req?: { url?: string | null } }) => {
     const status = doc?._status
-    if (status !== undefined && status !== 'published') return doc
+    const isVersionRestore = typeof req?.url === 'string' && req.url.includes('/versions/')
+    if (!isVersionRestore && status !== undefined && status !== 'published') return doc
     void notifySite(tags)
     return doc
   }

@@ -16,7 +16,7 @@ export const Articles: CollectionConfig = {
     defaultColumns: ['title', 'category', 'publishedAt', '_status'],
     preview: sitePreviewUrlFor((doc) => `/blog/${doc.slug ?? ''}`),
   },
-  versions: { drafts: true },
+  versions: { drafts: { autosave: { interval: 1000 } } },
   hooks: {
     afterChange: [notifyAfterChange(['cms:articles'])],
   },

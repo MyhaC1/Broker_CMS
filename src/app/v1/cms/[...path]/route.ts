@@ -87,6 +87,34 @@ export async function GET(
       })
     }
 
+    // Конфиг тенанта для бэкендов платформы (терминал): /v1/cms/sites/{slug}
+    // Под X-API-Key (server-side), НЕ публичный: стартовый баланс и будущие
+    // настройки тенанта — не для браузера
+    if (resource === 'sites' && segments.length === 2) {
+      const slug = segments[1] ?? ''
+      if (!/^[a-z0-9-]{2,32}$/.test(slug)) {
+        return NextResponse.json({ error: 'invalid_site' }, { status: 400 })
+      }
+      const found = await payload.find({
+        collection: 'sites',
+        where: { slug: { equals: slug } },
+        limit: 1,
+        depth: 0,
+      })
+      const site = found.docs[0] as Record<string, any> | undefined
+      if (!site) {
+        return NextResponse.json({ error: 'unknown_site' }, { status: 404 })
+      }
+      return jsonWithVersion(
+        {
+          slug: String(site.slug),
+          name: String(site.name ?? ''),
+          demoStartBalanceCents: Number(site.demoStartBalanceCents ?? 1000000),
+        },
+        site.updatedAt,
+      )
+    }
+
     // Деталка статьи: /v1/cms/articles/{slug}
     if (resource === 'articles' && segments.length === 2) {
       const found = await payload.find({

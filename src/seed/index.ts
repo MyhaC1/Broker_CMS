@@ -27,19 +27,31 @@ const payload = await getPayload({ config })
 /* ---------------------------------------------------------------- */
 /* 1. Первичный администратор                                        */
 /* ---------------------------------------------------------------- */
-const adminEmail = process.env.SEED_ADMIN_EMAIL ?? 'admin@example.com'
-const adminPassword = process.env.SEED_ADMIN_PASSWORD ?? 'admin1234'
-const existing = await payload.find({
-  collection: 'users',
-  where: { email: { equals: adminEmail } },
-  limit: 1,
-})
-if (existing.totalDocs === 0) {
-  await payload.create({ collection: 'users', data: { email: adminEmail, password: adminPassword } })
-  console.info(`[seed] admin user created: ${adminEmail}`)
-} else {
-  console.info(`[seed] admin user already exists: ${adminEmail}`)
+async function ensureUser(email: string, password: string, role: 'admin' | 'editor') {
+  const existing = await payload.find({
+    collection: 'users',
+    where: { email: { equals: email } },
+    limit: 1,
+  })
+  if (existing.totalDocs === 0) {
+    await payload.create({ collection: 'users', data: { email, password, role } })
+    console.info(`[seed] user created: ${email} (${role})`)
+  } else {
+    console.info(`[seed] user already exists: ${email}`)
+  }
 }
+
+await ensureUser(
+  process.env.SEED_ADMIN_EMAIL ?? 'admin@example.com',
+  process.env.SEED_ADMIN_PASSWORD ?? 'admin1234',
+  'admin',
+)
+// Демонстрационный редактор: контент — да, управление учётками — нет
+await ensureUser(
+  process.env.SEED_EDITOR_EMAIL ?? 'editor@example.com',
+  process.env.SEED_EDITOR_PASSWORD ?? 'editor1234',
+  'editor',
+)
 
 /* ---------------------------------------------------------------- */
 /* 2. Глобалы: фикстура → данные Payload (обратно мапперам ручек)     */

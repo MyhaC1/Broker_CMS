@@ -40,8 +40,19 @@ for (const resource of RESOURCES) {
     if (!res.ok) { fail(`${resource} ${locale}: HTTP ${res.status}`); continue; }
     const body = await res.json();
     const fixture = JSON.parse(readFileSync(join(FIXTURES, `cms.${resource}.${locale}.json`), 'utf8'));
-    // Медиа в seed не загружаются — фикстурный favicon сайта заменяем на null
-    if (resource === 'brand') fixture.favicon = null;
+    // Медиа бренда специфичны для окружения (их загружает редактор, seed не сидирует):
+    // проверяем форму объекта, затем исключаем из побайтового сравнения
+    if (resource === 'brand') {
+      for (const key of ['logo', 'favicon']) {
+        const m = body[key];
+        const shapeOk =
+          m === null ||
+          (m && typeof m.url === 'string' && Number.isInteger(m.width) &&
+            Number.isInteger(m.height) && typeof m.alt === 'string' && typeof m.mimeType === 'string');
+        if (!shapeOk) fail(`${resource} ${locale}: некорректная форма ${key}: ${JSON.stringify(m)}`);
+        fixture[key] = m;
+      }
+    }
     try {
       assert.deepStrictEqual(normalize(body), normalize(fixture));
       console.log(`OK    ${resource} ${locale}`);

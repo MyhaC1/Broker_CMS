@@ -17,6 +17,20 @@ services:
       timeout: 3s
       retries: 10
 
+  # Одноразовый прогон миграций перед стартом CMS (payload migrate).
+  # Использует build-стадию образа (полные node_modules + исходники).
+  migrate:
+    build:
+      context: .
+      target: build
+    command: ['pnpm', 'payload', 'migrate']
+    environment:
+      DATABASE_URL: postgres://cms:cms@db:5432/broker_cms
+      PAYLOAD_SECRET: dev-payload-secret-b7f3a1c94e2d48f6a0c5e8d217394b6f
+    depends_on:
+      db:
+        condition: service_healthy
+
   cms:
     build: .
     ports:
@@ -39,6 +53,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
 
 volumes:
   pgdata:

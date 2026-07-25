@@ -14,7 +14,9 @@
 - **Локализация** — `ru` (основная) и `en`, fallback на `ru`; совпадает с локалями сайта.
 - `X-Content-Version` в ответах = `updatedAt` источника (ADR-020).
 - **Preview** — кнопка Preview в админке ведёт на `{SITE_URL}/api/preview?secret&path`: сайт ставит draftMode-куку и запрашивает CMS с `draft=true` — редактор видит черновик до публикации, обычные посетители — нет. Сохранение черновика вебхук не шлёт.
-- **Контрактный тест** — `node scripts/contract-check.mjs` сверяет живые ответы со всеми фикстурами (datetime — по моменту времени); гоняется в CI против production-сборки.
+- **Контрактный тест** — `node scripts/contract-check.mjs` сверяет живые ответы со всеми фикстурами (datetime — по моменту времени; медиа бренда — только форма); гоняется в CI против production-сборки.
+- **Схема БД** — dev на хосте использует push (`pnpm payload run scripts/push-schema.ts` после изменения конфига), прод — ТОЛЬКО миграции: `pnpm migrate:create <name>` при изменении схемы → компоуз-сервис `migrate` накатывает их до старта CMS (db → migrate → cms). Проверено на чистой БД.
+- **Роли** — `admin` (всё, включая пользователей) и `editor` (весь контент, но не учётки; чужих пользователей не видит, свою роль поднять не может). Роль в JWT (`saveToJWT`).
 
 ## Запуск
 
@@ -65,6 +67,7 @@ src/
 | `pnpm generate:types` | `src/payload-types.ts` из конфига |
 | `pnpm generate:importmap` | importMap админки |
 | `pnpm typecheck` | tsc --noEmit |
+| `pnpm migrate` / `pnpm migrate:create <name>` / `pnpm migrate:status` | Прод-миграции БД (src/migrations) |
 | `node scripts/contract-check.mjs` | Контрактный тест против фикстур (нужна запущенная CMS) |
 | `pnpm payload run scripts/push-schema.ts` | Синхронизация схемы БД с конфигом БЕЗ сида (контент редакторов не трогается); нужна после изменения коллекций/глобалов, если БД создавалась раньше |
 

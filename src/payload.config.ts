@@ -57,6 +57,8 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
     },
+    // Прод накатывает миграции (payload migrate); dev-push — только локально
+    migrationDir: path.resolve(dirname, 'migrations'),
   }),
   sharp,
   // Локали контента совпадают с локалями сайта (next-intl): ru — основная, en — fallback на ru

@@ -7,6 +7,7 @@ import sharp from 'sharp'
 
 import { Articles } from './collections/Articles'
 import { Media } from './collections/Media'
+import { Sites } from './collections/Sites'
 import { Users } from './collections/Users'
 import { Academy } from './globals/Academy'
 import { Accounts } from './globals/Accounts'
@@ -32,7 +33,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Articles],
+  collections: [Users, Media, Articles, Sites],
   globals: [
     Brand,
     Navigation,

@@ -233,5 +233,30 @@ for (const ru of articlesRu) {
 }
 console.info(`[seed] articles seeded: ${articlesRu.length} (ru+en)`)
 
+/* ---------------------------------------------------------------- */
+/* 4. Реестр сайтов: первый тенант apex-ru из бренд-фикстуры          */
+/* ---------------------------------------------------------------- */
+const brandRu = fixture('brand', 'ru')
+const existingSite = await payload.find({
+  collection: 'sites',
+  where: { slug: { equals: 'apex-ru' } },
+  limit: 1,
+})
+if (existingSite.totalDocs === 0) {
+  await payload.create({
+    collection: 'sites',
+    data: {
+      slug: 'apex-ru',
+      name: brandRu.name,
+      primaryColor: brandRu.primaryColor,
+      socials: brandRu.socials,
+      demoStartBalanceCents: 1000000,
+    } as never,
+  })
+  console.info('[seed] site created: apex-ru')
+} else {
+  console.info('[seed] site already exists: apex-ru')
+}
+
 console.info('[seed] done')
 process.exit(0)

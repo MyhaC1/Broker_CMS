@@ -47,6 +47,32 @@ export async function GET(
   try {
     const payload = await getPayload({ config })
 
+    // Бренд конкретного сайта (мульти-тенантность): /v1/cms/brand?site=<slug>
+    // Форма ответа — тот же контракт cms.brand; источник — коллекция sites
+    const siteSlug = url.searchParams.get('site')
+    if (resource === 'brand' && siteSlug && segments.length === 1) {
+      if (!/^[a-z0-9-]{2,32}$/.test(siteSlug)) {
+        return NextResponse.json({ error: 'invalid_site' }, { status: 400 })
+      }
+      const found = await payload.find({
+        collection: 'sites',
+        where: { slug: { equals: siteSlug } },
+        limit: 1,
+        depth: 2,
+      })
+      const site = found.docs[0] as Record<string, any> | undefined
+      if (!site) {
+        return NextResponse.json({ error: 'unknown_site' }, { status: 404 })
+      }
+      const dto = RESOURCES.brand!.map(site)
+      const check = validateContract('brand', dto)
+      if (!check.valid) {
+        console.error(`[contract] brand?site=${siteSlug} violates schema:`, check.errors)
+        return NextResponse.json({ error: 'contract_violation', details: check.errors }, { status: 500 })
+      }
+      return jsonWithVersion(dto, site.updatedAt)
+    }
+
     // Деталка статьи: /v1/cms/articles/{slug}
     if (resource === 'articles' && segments.length === 2) {
       const found = await payload.find({

@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { notifySite } from '../lib/notify-site'
+import { defaultSiteSlug, notifySiteFor } from '../lib/notify-site'
 
 /**
  * Реестр сайтов платформы (мульти-тенантность, ADR-023/024 сайта):
@@ -18,8 +18,12 @@ export const Sites: CollectionConfig = {
   hooks: {
     afterChange: [
       ({ doc }) => {
-        // Инвалидация бренда конкретного сайта (тег cms:brand:<slug>)
-        void notifySite([`cms:brand:${(doc as { slug?: string }).slug ?? 'unknown'}`])
+        // Бренд сайта — поля этой карточки; вебхук самому сайту
+        const site = doc as { slug?: string; webhookUrl?: string | null; webhookSecret?: string | null }
+        const slug = site.slug ?? 'unknown'
+        const tags = [`cms:brand:${slug}`]
+        if (slug === defaultSiteSlug()) tags.unshift('cms:brand')
+        void notifySiteFor(site, tags)
         return doc
       },
     ],
@@ -67,6 +71,18 @@ export const Sites: CollectionConfig = {
       defaultValue: 1000000,
       min: 0,
       label: 'Стартовый демо-баланс, центы',
+    },
+    {
+      name: 'webhookUrl',
+      type: 'text',
+      label: 'Вебхук сайта (/api/revalidate)',
+      admin: { description: 'Пусто — используется SITE_WEBHOOK_URL из окружения' },
+    },
+    {
+      name: 'webhookSecret',
+      type: 'text',
+      label: 'Секрет вебхука',
+      admin: { description: 'Пусто — используется SITE_WEBHOOK_SECRET из окружения' },
     },
   ],
 }

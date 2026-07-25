@@ -69,8 +69,20 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
-    articles: Article;
     sites: Site;
+    articles: Article;
+    'site-navigation': SiteNavigation;
+    'site-faq': SiteFaq;
+    'site-instruments': SiteInstrument;
+    'site-accounts': SiteAccount;
+    'site-promotions': SitePromotion;
+    'site-partners': SitePartner;
+    'site-academy': SiteAcademy;
+    'site-streams': SiteStream;
+    'site-contacts': SiteContact;
+    'site-careers': SiteCareer;
+    'site-legal': SiteLegal;
+    'site-system-status': SiteSystemStatus;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -80,8 +92,20 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
-    articles: ArticlesSelect<false> | ArticlesSelect<true>;
     sites: SitesSelect<false> | SitesSelect<true>;
+    articles: ArticlesSelect<false> | ArticlesSelect<true>;
+    'site-navigation': SiteNavigationSelect<false> | SiteNavigationSelect<true>;
+    'site-faq': SiteFaqSelect<false> | SiteFaqSelect<true>;
+    'site-instruments': SiteInstrumentsSelect<false> | SiteInstrumentsSelect<true>;
+    'site-accounts': SiteAccountsSelect<false> | SiteAccountsSelect<true>;
+    'site-promotions': SitePromotionsSelect<false> | SitePromotionsSelect<true>;
+    'site-partners': SitePartnersSelect<false> | SitePartnersSelect<true>;
+    'site-academy': SiteAcademySelect<false> | SiteAcademySelect<true>;
+    'site-streams': SiteStreamsSelect<false> | SiteStreamsSelect<true>;
+    'site-contacts': SiteContactsSelect<false> | SiteContactsSelect<true>;
+    'site-careers': SiteCareersSelect<false> | SiteCareersSelect<true>;
+    'site-legal': SiteLegalSelect<false> | SiteLegalSelect<true>;
+    'site-system-status': SiteSystemStatusSelect<false> | SiteSystemStatusSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -91,36 +115,8 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: ('false' | 'none' | 'null') | false | null | ('ru' | 'en') | ('ru' | 'en')[];
-  globals: {
-    brand: Brand;
-    navigation: Navigation;
-    faq: Faq;
-    instruments: Instrument;
-    accounts: Account;
-    promotions: Promotion;
-    partners: Partner;
-    academy: Academy;
-    streams: Stream;
-    contacts: Contact;
-    careers: Career;
-    legal: Legal;
-    'system-status': SystemStatus;
-  };
-  globalsSelect: {
-    brand: BrandSelect<false> | BrandSelect<true>;
-    navigation: NavigationSelect<false> | NavigationSelect<true>;
-    faq: FaqSelect<false> | FaqSelect<true>;
-    instruments: InstrumentsSelect<false> | InstrumentsSelect<true>;
-    accounts: AccountsSelect<false> | AccountsSelect<true>;
-    promotions: PromotionsSelect<false> | PromotionsSelect<true>;
-    partners: PartnersSelect<false> | PartnersSelect<true>;
-    academy: AcademySelect<false> | AcademySelect<true>;
-    streams: StreamsSelect<false> | StreamsSelect<true>;
-    contacts: ContactsSelect<false> | ContactsSelect<true>;
-    careers: CareersSelect<false> | CareersSelect<true>;
-    legal: LegalSelect<false> | LegalSelect<true>;
-    'system-status': SystemStatusSelect<false> | SystemStatusSelect<true>;
-  };
+  globals: {};
+  globalsSelect: {};
   locale: 'ru' | 'en';
   widgets: {
     collections: CollectionsWidget;
@@ -196,24 +192,6 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "articles".
- */
-export interface Article {
-  id: number;
-  slug: string;
-  title: string;
-  excerpt: string;
-  category: string;
-  source: string;
-  publishedAt: string;
-  readingMinutes: number;
-  bodyMarkdown: string;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "sites".
  */
 export interface Site {
@@ -231,8 +209,394 @@ export interface Site {
       }[]
     | null;
   demoStartBalanceCents: number;
+  /**
+   * Пусто — используется SITE_WEBHOOK_URL из окружения
+   */
+  webhookUrl?: string | null;
+  /**
+   * Пусто — используется SITE_WEBHOOK_SECRET из окружения
+   */
+  webhookSecret?: string | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "articles".
+ */
+export interface Article {
+  id: number;
+  site: number | Site;
+  slug: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  source: string;
+  publishedAt: string;
+  readingMinutes: number;
+  bodyMarkdown: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-navigation".
+ */
+export interface SiteNavigation {
+  id: number;
+  site: number | Site;
+  header?:
+    | {
+        label: string;
+        href: string;
+        id?: string | null;
+      }[]
+    | null;
+  footerColumns?:
+    | {
+        title: string;
+        links?:
+          | {
+              label: string;
+              href: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  riskWarning: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-faq".
+ */
+export interface SiteFaq {
+  id: number;
+  site: number | Site;
+  sections?:
+    | {
+        title: string;
+        items?:
+          | {
+              question: string;
+              answer: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-instruments".
+ */
+export interface SiteInstrument {
+  id: number;
+  site: number | Site;
+  items?:
+    | {
+        symbol: string;
+        name: string;
+        category: 'forex' | 'metals' | 'crypto' | 'indices' | 'stocks' | 'energy';
+        digits: number;
+        leverageMax: string;
+        spreadFrom: string;
+        swapFree?: boolean | null;
+        icon?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-accounts".
+ */
+export interface SiteAccount {
+  id: number;
+  site: number | Site;
+  items?:
+    | {
+        planId: string;
+        name: string;
+        description: string;
+        minDeposit: string;
+        featured?: boolean | null;
+        features?:
+          | {
+              label: string;
+              value: string;
+              id?: string | null;
+            }[]
+          | null;
+        pricing: {
+          spreadPips: number;
+          commissionPerLotRT: number;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-promotions".
+ */
+export interface SitePromotion {
+  id: number;
+  site: number | Site;
+  items?:
+    | {
+        promoId: string;
+        badge: string;
+        title: string;
+        description: string;
+        terms: string;
+        ctaLabel: string;
+        ctaHref: string;
+        featured?: boolean | null;
+        activeFrom?: string | null;
+        activeTo?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-partners".
+ */
+export interface SitePartner {
+  id: number;
+  site: number | Site;
+  models?:
+    | {
+        name: string;
+        description: string;
+        features?:
+          | {
+              text: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  tiers?:
+    | {
+        name: string;
+        clients: string;
+        share: string;
+        featured?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  steps?:
+    | {
+        title: string;
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-academy".
+ */
+export interface SiteAcademy {
+  id: number;
+  site: number | Site;
+  articles?:
+    | {
+        slug: string;
+        title: string;
+        excerpt: string;
+        level: 'beginner' | 'intermediate';
+        readingMinutes: number;
+        bodyMarkdown: string;
+        id?: string | null;
+      }[]
+    | null;
+  webinars?:
+    | {
+        webinarId: string;
+        title: string;
+        speaker: string;
+        speakerRole: string;
+        startsAt: string;
+        durationMinutes: number;
+        level: string;
+        description: string;
+        id?: string | null;
+      }[]
+    | null;
+  glossary?:
+    | {
+        term: string;
+        definition: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-streams".
+ */
+export interface SiteStream {
+  id: number;
+  site: number | Site;
+  items?:
+    | {
+        provider: 'youtube' | 'vimeo';
+        videoId: string;
+        title: string;
+        poster?: (number | null) | Media;
+        startsAt: string;
+        status: 'live' | 'upcoming' | 'past';
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-contacts".
+ */
+export interface SiteContact {
+  id: number;
+  site: number | Site;
+  channels?:
+    | {
+        title: string;
+        value: string;
+        detail: string;
+        id?: string | null;
+      }[]
+    | null;
+  offices?:
+    | {
+        city: string;
+        country: string;
+        address: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-careers".
+ */
+export interface SiteCareer {
+  id: number;
+  site: number | Site;
+  benefits?:
+    | {
+        title: string;
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  vacancies?:
+    | {
+        title: string;
+        department: string;
+        location: string;
+        type: string;
+        applyEmail: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-legal".
+ */
+export interface SiteLegal {
+  id: number;
+  site: number | Site;
+  items?:
+    | {
+        slug: string;
+        title: string;
+        updatedAt: string;
+        intro: string;
+        sections?:
+          | {
+              heading: string;
+              paragraphsMarkdown?:
+                | {
+                    text: string;
+                    id?: string | null;
+                  }[]
+                | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-system-status".
+ */
+export interface SiteSystemStatus {
+  id: number;
+  site: number | Site;
+  services?:
+    | {
+        serviceId: string;
+        name: string;
+        description: string;
+        status: 'operational' | 'degraded' | 'outage' | 'maintenance';
+        uptime90d: string;
+        id?: string | null;
+      }[]
+    | null;
+  incidents?:
+    | {
+        date: string;
+        title: string;
+        status: string;
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -267,12 +631,60 @@ export interface PayloadLockedDocument {
         value: number | Media;
       } | null)
     | ({
+        relationTo: 'sites';
+        value: number | Site;
+      } | null)
+    | ({
         relationTo: 'articles';
         value: number | Article;
       } | null)
     | ({
-        relationTo: 'sites';
-        value: number | Site;
+        relationTo: 'site-navigation';
+        value: number | SiteNavigation;
+      } | null)
+    | ({
+        relationTo: 'site-faq';
+        value: number | SiteFaq;
+      } | null)
+    | ({
+        relationTo: 'site-instruments';
+        value: number | SiteInstrument;
+      } | null)
+    | ({
+        relationTo: 'site-accounts';
+        value: number | SiteAccount;
+      } | null)
+    | ({
+        relationTo: 'site-promotions';
+        value: number | SitePromotion;
+      } | null)
+    | ({
+        relationTo: 'site-partners';
+        value: number | SitePartner;
+      } | null)
+    | ({
+        relationTo: 'site-academy';
+        value: number | SiteAcademy;
+      } | null)
+    | ({
+        relationTo: 'site-streams';
+        value: number | SiteStream;
+      } | null)
+    | ({
+        relationTo: 'site-contacts';
+        value: number | SiteContact;
+      } | null)
+    | ({
+        relationTo: 'site-careers';
+        value: number | SiteCareer;
+      } | null)
+    | ({
+        relationTo: 'site-legal';
+        value: number | SiteLegal;
+      } | null)
+    | ({
+        relationTo: 'site-system-status';
+        value: number | SiteSystemStatus;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -359,23 +771,6 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "articles_select".
- */
-export interface ArticlesSelect<T extends boolean = true> {
-  slug?: T;
-  title?: T;
-  excerpt?: T;
-  category?: T;
-  source?: T;
-  publishedAt?: T;
-  readingMinutes?: T;
-  bodyMarkdown?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "sites_select".
  */
 export interface SitesSelect<T extends boolean = true> {
@@ -392,8 +787,377 @@ export interface SitesSelect<T extends boolean = true> {
         id?: T;
       };
   demoStartBalanceCents?: T;
+  webhookUrl?: T;
+  webhookSecret?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "articles_select".
+ */
+export interface ArticlesSelect<T extends boolean = true> {
+  site?: T;
+  slug?: T;
+  title?: T;
+  excerpt?: T;
+  category?: T;
+  source?: T;
+  publishedAt?: T;
+  readingMinutes?: T;
+  bodyMarkdown?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-navigation_select".
+ */
+export interface SiteNavigationSelect<T extends boolean = true> {
+  site?: T;
+  header?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+        id?: T;
+      };
+  footerColumns?:
+    | T
+    | {
+        title?: T;
+        links?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  riskWarning?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-faq_select".
+ */
+export interface SiteFaqSelect<T extends boolean = true> {
+  site?: T;
+  sections?:
+    | T
+    | {
+        title?: T;
+        items?:
+          | T
+          | {
+              question?: T;
+              answer?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-instruments_select".
+ */
+export interface SiteInstrumentsSelect<T extends boolean = true> {
+  site?: T;
+  items?:
+    | T
+    | {
+        symbol?: T;
+        name?: T;
+        category?: T;
+        digits?: T;
+        leverageMax?: T;
+        spreadFrom?: T;
+        swapFree?: T;
+        icon?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-accounts_select".
+ */
+export interface SiteAccountsSelect<T extends boolean = true> {
+  site?: T;
+  items?:
+    | T
+    | {
+        planId?: T;
+        name?: T;
+        description?: T;
+        minDeposit?: T;
+        featured?: T;
+        features?:
+          | T
+          | {
+              label?: T;
+              value?: T;
+              id?: T;
+            };
+        pricing?:
+          | T
+          | {
+              spreadPips?: T;
+              commissionPerLotRT?: T;
+            };
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-promotions_select".
+ */
+export interface SitePromotionsSelect<T extends boolean = true> {
+  site?: T;
+  items?:
+    | T
+    | {
+        promoId?: T;
+        badge?: T;
+        title?: T;
+        description?: T;
+        terms?: T;
+        ctaLabel?: T;
+        ctaHref?: T;
+        featured?: T;
+        activeFrom?: T;
+        activeTo?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-partners_select".
+ */
+export interface SitePartnersSelect<T extends boolean = true> {
+  site?: T;
+  models?:
+    | T
+    | {
+        name?: T;
+        description?: T;
+        features?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  tiers?:
+    | T
+    | {
+        name?: T;
+        clients?: T;
+        share?: T;
+        featured?: T;
+        id?: T;
+      };
+  steps?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-academy_select".
+ */
+export interface SiteAcademySelect<T extends boolean = true> {
+  site?: T;
+  articles?:
+    | T
+    | {
+        slug?: T;
+        title?: T;
+        excerpt?: T;
+        level?: T;
+        readingMinutes?: T;
+        bodyMarkdown?: T;
+        id?: T;
+      };
+  webinars?:
+    | T
+    | {
+        webinarId?: T;
+        title?: T;
+        speaker?: T;
+        speakerRole?: T;
+        startsAt?: T;
+        durationMinutes?: T;
+        level?: T;
+        description?: T;
+        id?: T;
+      };
+  glossary?:
+    | T
+    | {
+        term?: T;
+        definition?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-streams_select".
+ */
+export interface SiteStreamsSelect<T extends boolean = true> {
+  site?: T;
+  items?:
+    | T
+    | {
+        provider?: T;
+        videoId?: T;
+        title?: T;
+        poster?: T;
+        startsAt?: T;
+        status?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-contacts_select".
+ */
+export interface SiteContactsSelect<T extends boolean = true> {
+  site?: T;
+  channels?:
+    | T
+    | {
+        title?: T;
+        value?: T;
+        detail?: T;
+        id?: T;
+      };
+  offices?:
+    | T
+    | {
+        city?: T;
+        country?: T;
+        address?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-careers_select".
+ */
+export interface SiteCareersSelect<T extends boolean = true> {
+  site?: T;
+  benefits?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        id?: T;
+      };
+  vacancies?:
+    | T
+    | {
+        title?: T;
+        department?: T;
+        location?: T;
+        type?: T;
+        applyEmail?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-legal_select".
+ */
+export interface SiteLegalSelect<T extends boolean = true> {
+  site?: T;
+  items?:
+    | T
+    | {
+        slug?: T;
+        title?: T;
+        updatedAt?: T;
+        intro?: T;
+        sections?:
+          | T
+          | {
+              heading?: T;
+              paragraphsMarkdown?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-system-status_select".
+ */
+export interface SiteSystemStatusSelect<T extends boolean = true> {
+  site?: T;
+  services?:
+    | T
+    | {
+        serviceId?: T;
+        name?: T;
+        description?: T;
+        status?: T;
+        uptime90d?: T;
+        id?: T;
+      };
+  incidents?:
+    | T
+    | {
+        date?: T;
+        title?: T;
+        status?: T;
+        text?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -434,744 +1198,6 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "brand".
- */
-export interface Brand {
-  id: number;
-  name: string;
-  logo?: (number | null) | Media;
-  favicon?: (number | null) | Media;
-  primaryColor: string;
-  socials?:
-    | {
-        name: string;
-        url: string;
-        id?: string | null;
-      }[]
-    | null;
-  _status?: ('draft' | 'published') | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "navigation".
- */
-export interface Navigation {
-  id: number;
-  header?:
-    | {
-        label: string;
-        href: string;
-        id?: string | null;
-      }[]
-    | null;
-  footerColumns?:
-    | {
-        title: string;
-        links?:
-          | {
-              label: string;
-              href: string;
-              id?: string | null;
-            }[]
-          | null;
-        id?: string | null;
-      }[]
-    | null;
-  riskWarning: string;
-  _status?: ('draft' | 'published') | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "faq".
- */
-export interface Faq {
-  id: number;
-  sections?:
-    | {
-        title: string;
-        items?:
-          | {
-              question: string;
-              answer: string;
-              id?: string | null;
-            }[]
-          | null;
-        id?: string | null;
-      }[]
-    | null;
-  _status?: ('draft' | 'published') | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "instruments".
- */
-export interface Instrument {
-  id: number;
-  items?:
-    | {
-        symbol: string;
-        name: string;
-        category: 'forex' | 'metals' | 'crypto' | 'indices' | 'stocks' | 'energy';
-        digits: number;
-        leverageMax: string;
-        spreadFrom: string;
-        swapFree?: boolean | null;
-        icon?: (number | null) | Media;
-        id?: string | null;
-      }[]
-    | null;
-  _status?: ('draft' | 'published') | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "accounts".
- */
-export interface Account {
-  id: number;
-  items?:
-    | {
-        planId: string;
-        name: string;
-        description: string;
-        minDeposit: string;
-        featured?: boolean | null;
-        features?:
-          | {
-              label: string;
-              value: string;
-              id?: string | null;
-            }[]
-          | null;
-        pricing: {
-          spreadPips: number;
-          commissionPerLotRT: number;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  _status?: ('draft' | 'published') | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "promotions".
- */
-export interface Promotion {
-  id: number;
-  items?:
-    | {
-        promoId: string;
-        badge: string;
-        title: string;
-        description: string;
-        terms: string;
-        ctaLabel: string;
-        ctaHref: string;
-        featured?: boolean | null;
-        activeFrom?: string | null;
-        activeTo?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  _status?: ('draft' | 'published') | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "partners".
- */
-export interface Partner {
-  id: number;
-  models?:
-    | {
-        name: string;
-        description: string;
-        features?:
-          | {
-              text: string;
-              id?: string | null;
-            }[]
-          | null;
-        id?: string | null;
-      }[]
-    | null;
-  tiers?:
-    | {
-        name: string;
-        clients: string;
-        share: string;
-        featured?: boolean | null;
-        id?: string | null;
-      }[]
-    | null;
-  steps?:
-    | {
-        title: string;
-        text: string;
-        id?: string | null;
-      }[]
-    | null;
-  _status?: ('draft' | 'published') | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "academy".
- */
-export interface Academy {
-  id: number;
-  articles?:
-    | {
-        slug: string;
-        title: string;
-        excerpt: string;
-        level: 'beginner' | 'intermediate';
-        readingMinutes: number;
-        bodyMarkdown: string;
-        id?: string | null;
-      }[]
-    | null;
-  webinars?:
-    | {
-        webinarId: string;
-        title: string;
-        speaker: string;
-        speakerRole: string;
-        startsAt: string;
-        durationMinutes: number;
-        level: string;
-        description: string;
-        id?: string | null;
-      }[]
-    | null;
-  glossary?:
-    | {
-        term: string;
-        definition: string;
-        id?: string | null;
-      }[]
-    | null;
-  _status?: ('draft' | 'published') | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "streams".
- */
-export interface Stream {
-  id: number;
-  items?:
-    | {
-        provider: 'youtube' | 'vimeo';
-        videoId: string;
-        title: string;
-        poster?: (number | null) | Media;
-        startsAt: string;
-        status: 'live' | 'upcoming' | 'past';
-        id?: string | null;
-      }[]
-    | null;
-  _status?: ('draft' | 'published') | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "contacts".
- */
-export interface Contact {
-  id: number;
-  channels?:
-    | {
-        title: string;
-        value: string;
-        detail: string;
-        id?: string | null;
-      }[]
-    | null;
-  offices?:
-    | {
-        city: string;
-        country: string;
-        address: string;
-        id?: string | null;
-      }[]
-    | null;
-  _status?: ('draft' | 'published') | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "careers".
- */
-export interface Career {
-  id: number;
-  benefits?:
-    | {
-        title: string;
-        text: string;
-        id?: string | null;
-      }[]
-    | null;
-  vacancies?:
-    | {
-        title: string;
-        department: string;
-        location: string;
-        type: string;
-        applyEmail: string;
-        id?: string | null;
-      }[]
-    | null;
-  _status?: ('draft' | 'published') | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "legal".
- */
-export interface Legal {
-  id: number;
-  items?:
-    | {
-        slug: string;
-        title: string;
-        updatedAt: string;
-        intro: string;
-        sections?:
-          | {
-              heading: string;
-              paragraphsMarkdown?:
-                | {
-                    text: string;
-                    id?: string | null;
-                  }[]
-                | null;
-              id?: string | null;
-            }[]
-          | null;
-        id?: string | null;
-      }[]
-    | null;
-  _status?: ('draft' | 'published') | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "system-status".
- */
-export interface SystemStatus {
-  id: number;
-  services?:
-    | {
-        serviceId: string;
-        name: string;
-        description: string;
-        status: 'operational' | 'degraded' | 'outage' | 'maintenance';
-        uptime90d: string;
-        id?: string | null;
-      }[]
-    | null;
-  incidents?:
-    | {
-        date: string;
-        title: string;
-        status: string;
-        text: string;
-        id?: string | null;
-      }[]
-    | null;
-  _status?: ('draft' | 'published') | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "brand_select".
- */
-export interface BrandSelect<T extends boolean = true> {
-  name?: T;
-  logo?: T;
-  favicon?: T;
-  primaryColor?: T;
-  socials?:
-    | T
-    | {
-        name?: T;
-        url?: T;
-        id?: T;
-      };
-  _status?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "navigation_select".
- */
-export interface NavigationSelect<T extends boolean = true> {
-  header?:
-    | T
-    | {
-        label?: T;
-        href?: T;
-        id?: T;
-      };
-  footerColumns?:
-    | T
-    | {
-        title?: T;
-        links?:
-          | T
-          | {
-              label?: T;
-              href?: T;
-              id?: T;
-            };
-        id?: T;
-      };
-  riskWarning?: T;
-  _status?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "faq_select".
- */
-export interface FaqSelect<T extends boolean = true> {
-  sections?:
-    | T
-    | {
-        title?: T;
-        items?:
-          | T
-          | {
-              question?: T;
-              answer?: T;
-              id?: T;
-            };
-        id?: T;
-      };
-  _status?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "instruments_select".
- */
-export interface InstrumentsSelect<T extends boolean = true> {
-  items?:
-    | T
-    | {
-        symbol?: T;
-        name?: T;
-        category?: T;
-        digits?: T;
-        leverageMax?: T;
-        spreadFrom?: T;
-        swapFree?: T;
-        icon?: T;
-        id?: T;
-      };
-  _status?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "accounts_select".
- */
-export interface AccountsSelect<T extends boolean = true> {
-  items?:
-    | T
-    | {
-        planId?: T;
-        name?: T;
-        description?: T;
-        minDeposit?: T;
-        featured?: T;
-        features?:
-          | T
-          | {
-              label?: T;
-              value?: T;
-              id?: T;
-            };
-        pricing?:
-          | T
-          | {
-              spreadPips?: T;
-              commissionPerLotRT?: T;
-            };
-        id?: T;
-      };
-  _status?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "promotions_select".
- */
-export interface PromotionsSelect<T extends boolean = true> {
-  items?:
-    | T
-    | {
-        promoId?: T;
-        badge?: T;
-        title?: T;
-        description?: T;
-        terms?: T;
-        ctaLabel?: T;
-        ctaHref?: T;
-        featured?: T;
-        activeFrom?: T;
-        activeTo?: T;
-        id?: T;
-      };
-  _status?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "partners_select".
- */
-export interface PartnersSelect<T extends boolean = true> {
-  models?:
-    | T
-    | {
-        name?: T;
-        description?: T;
-        features?:
-          | T
-          | {
-              text?: T;
-              id?: T;
-            };
-        id?: T;
-      };
-  tiers?:
-    | T
-    | {
-        name?: T;
-        clients?: T;
-        share?: T;
-        featured?: T;
-        id?: T;
-      };
-  steps?:
-    | T
-    | {
-        title?: T;
-        text?: T;
-        id?: T;
-      };
-  _status?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "academy_select".
- */
-export interface AcademySelect<T extends boolean = true> {
-  articles?:
-    | T
-    | {
-        slug?: T;
-        title?: T;
-        excerpt?: T;
-        level?: T;
-        readingMinutes?: T;
-        bodyMarkdown?: T;
-        id?: T;
-      };
-  webinars?:
-    | T
-    | {
-        webinarId?: T;
-        title?: T;
-        speaker?: T;
-        speakerRole?: T;
-        startsAt?: T;
-        durationMinutes?: T;
-        level?: T;
-        description?: T;
-        id?: T;
-      };
-  glossary?:
-    | T
-    | {
-        term?: T;
-        definition?: T;
-        id?: T;
-      };
-  _status?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "streams_select".
- */
-export interface StreamsSelect<T extends boolean = true> {
-  items?:
-    | T
-    | {
-        provider?: T;
-        videoId?: T;
-        title?: T;
-        poster?: T;
-        startsAt?: T;
-        status?: T;
-        id?: T;
-      };
-  _status?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "contacts_select".
- */
-export interface ContactsSelect<T extends boolean = true> {
-  channels?:
-    | T
-    | {
-        title?: T;
-        value?: T;
-        detail?: T;
-        id?: T;
-      };
-  offices?:
-    | T
-    | {
-        city?: T;
-        country?: T;
-        address?: T;
-        id?: T;
-      };
-  _status?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "careers_select".
- */
-export interface CareersSelect<T extends boolean = true> {
-  benefits?:
-    | T
-    | {
-        title?: T;
-        text?: T;
-        id?: T;
-      };
-  vacancies?:
-    | T
-    | {
-        title?: T;
-        department?: T;
-        location?: T;
-        type?: T;
-        applyEmail?: T;
-        id?: T;
-      };
-  _status?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "legal_select".
- */
-export interface LegalSelect<T extends boolean = true> {
-  items?:
-    | T
-    | {
-        slug?: T;
-        title?: T;
-        updatedAt?: T;
-        intro?: T;
-        sections?:
-          | T
-          | {
-              heading?: T;
-              paragraphsMarkdown?:
-                | T
-                | {
-                    text?: T;
-                    id?: T;
-                  };
-              id?: T;
-            };
-        id?: T;
-      };
-  _status?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "system-status_select".
- */
-export interface SystemStatusSelect<T extends boolean = true> {
-  services?:
-    | T
-    | {
-        serviceId?: T;
-        name?: T;
-        description?: T;
-        status?: T;
-        uptime90d?: T;
-        id?: T;
-      };
-  incidents?:
-    | T
-    | {
-        date?: T;
-        title?: T;
-        status?: T;
-        text?: T;
-        id?: T;
-      };
-  _status?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

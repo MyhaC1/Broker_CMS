@@ -6,22 +6,10 @@ import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
 import { Articles } from './collections/Articles'
+import { CONTENT_COLLECTIONS } from './collections/content/index'
 import { Media } from './collections/Media'
 import { Sites } from './collections/Sites'
 import { Users } from './collections/Users'
-import { Academy } from './globals/Academy'
-import { Accounts } from './globals/Accounts'
-import { Brand } from './globals/Brand'
-import { Careers } from './globals/Careers'
-import { Contacts } from './globals/Contacts'
-import { Faq } from './globals/Faq'
-import { Instruments } from './globals/Instruments'
-import { Legal } from './globals/Legal'
-import { Navigation } from './globals/Navigation'
-import { Partners } from './globals/Partners'
-import { Promotions } from './globals/Promotions'
-import { Streams } from './globals/Streams'
-import { SystemStatus } from './globals/SystemStatus'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -33,22 +21,9 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Articles, Sites],
-  globals: [
-    Brand,
-    Navigation,
-    Faq,
-    Instruments,
-    Accounts,
-    Promotions,
-    Partners,
-    Academy,
-    Streams,
-    Contacts,
-    Careers,
-    Legal,
-    SystemStatus,
-  ],
+  // Мульти-тенантность: бывшие глобалы — per-site коллекции (один док на сайт);
+  // бренд — поля карточки sites; глобалов в конфиге больше нет
+  collections: [Users, Media, Sites, Articles, ...CONTENT_COLLECTIONS],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -62,7 +37,7 @@ export default buildConfig({
     migrationDir: path.resolve(dirname, 'migrations'),
   }),
   sharp,
-  // Локали контента совпадают с локалями сайта (next-intl): ru — основная, en — fallback на ru
+  // Локали контента совпадают с локалями сайтов (next-intl): ru — основная, en — fallback на ru
   localization: {
     locales: ['ru', 'en'],
     defaultLocale: 'ru',

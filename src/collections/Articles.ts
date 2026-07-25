@@ -21,7 +21,17 @@ export const Articles: CollectionConfig = {
     afterChange: [notifyAfterChange(['cms:articles'])],
   },
   fields: [
-    { name: 'slug', type: 'text', required: true, unique: true, index: true, label: 'Slug' },
+    {
+      name: 'site',
+      type: 'relationship',
+      relationTo: 'sites',
+      required: true,
+      index: true,
+      label: 'Сайт',
+    },
+    // slug уникален В ПРЕДЕЛАХ сайта (поиск деталки фильтрует site+slug);
+    // глобальный unique снят — одинаковые статьи на разных сайтах легальны
+    { name: 'slug', type: 'text', required: true, index: true, label: 'Slug' },
     { name: 'title', type: 'text', required: true, localized: true, label: 'Заголовок' },
     { name: 'excerpt', type: 'textarea', required: true, localized: true, label: 'Анонс' },
     { name: 'category', type: 'text', required: true, label: 'Категория (economy, forex…)' },

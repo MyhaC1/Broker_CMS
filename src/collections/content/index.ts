@@ -10,6 +10,7 @@ import { Partners } from '../../globals/Partners'
 import { Promotions } from '../../globals/Promotions'
 import { Streams } from '../../globals/Streams'
 import { SystemStatus } from '../../globals/SystemStatus'
+import { CabinetHome } from './CabinetHome'
 import { makeSiteContentCollection } from './factory'
 
 /**
@@ -104,6 +105,7 @@ export const CONTENT_COLLECTIONS = [
     fields: SystemStatus.fields,
     previewPath: '/status',
   }),
+  CabinetHome,
 ]
 
 /** resource контракта → slug per-site коллекции */
@@ -120,4 +122,5 @@ export const RESOURCE_TO_COLLECTION: Record<string, string> = {
   careers: 'site-careers',
   legal: 'site-legal',
   'system-status': 'site-system-status',
+  'cabinet-home': 'site-cabinet-home',
 }

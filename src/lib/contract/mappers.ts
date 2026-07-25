@@ -257,6 +257,61 @@ export function mapSystemStatus(doc: PayloadDoc) {
   }
 }
 
+/** Конфиг главной кабинета: строки массива → строгие модули контракта. */
+export function mapCabinetHome(doc: PayloadDoc) {
+  const modules: unknown[] = []
+  for (const row of doc.modules ?? []) {
+    const enabled = Boolean(row.enabled)
+    switch (row.type) {
+      case 'profile':
+      case 'promotions':
+        modules.push({ type: row.type, enabled })
+        break
+      case 'onboarding':
+        modules.push({
+          type: 'onboarding',
+          enabled,
+          steps: {
+            verification: Boolean(row.steps?.verification ?? true),
+            deposit: Boolean(row.steps?.deposit ?? true),
+            firstTrade: Boolean(row.steps?.firstTrade ?? true),
+          },
+        })
+        break
+      case 'balance':
+        modules.push({
+          type: 'balance',
+          enabled,
+          buttons: {
+            deposit: Boolean(row.buttons?.deposit ?? true),
+            withdraw: Boolean(row.buttons?.withdraw ?? true),
+            buyFiat: Boolean(row.buttons?.buyFiat ?? true),
+          },
+        })
+        break
+      case 'markets':
+        modules.push({
+          type: 'markets',
+          enabled,
+          tabs: {
+            assets: Boolean(row.tabs?.assets ?? true),
+            popular: Boolean(row.tabs?.popular ?? true),
+            newListing: Boolean(row.tabs?.newListing ?? true),
+            favorites: Boolean(row.tabs?.favorites ?? false),
+            gainers: Boolean(row.tabs?.gainers ?? true),
+            volume: Boolean(row.tabs?.volume ?? true),
+          },
+          newListingSymbols: (row.newListingSymbols ?? []).map((s: PayloadDoc) => String(s.symbol ?? '')),
+        })
+        break
+      default:
+        // неизвестный тип не отдаём — контракт строгий
+        break
+    }
+  }
+  return { modules }
+}
+
 /** Одна статья коллекции articles → контрактный cms.article. */
 export function mapArticle(doc: PayloadDoc) {
   return {

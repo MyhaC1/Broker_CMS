@@ -83,6 +83,7 @@ export interface Config {
     'site-careers': SiteCareer;
     'site-legal': SiteLegal;
     'site-system-status': SiteSystemStatus;
+    'site-cabinet-home': SiteCabinetHome;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -106,6 +107,7 @@ export interface Config {
     'site-careers': SiteCareersSelect<false> | SiteCareersSelect<true>;
     'site-legal': SiteLegalSelect<false> | SiteLegalSelect<true>;
     'site-system-status': SiteSystemStatusSelect<false> | SiteSystemStatusSelect<true>;
+    'site-cabinet-home': SiteCabinetHomeSelect<false> | SiteCabinetHomeSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -600,6 +602,48 @@ export interface SiteSystemStatus {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-cabinet-home".
+ */
+export interface SiteCabinetHome {
+  id: number;
+  site: number | Site;
+  modules?:
+    | {
+        type: 'profile' | 'onboarding' | 'balance' | 'markets' | 'promotions';
+        enabled?: boolean | null;
+        steps?: {
+          verification?: boolean | null;
+          deposit?: boolean | null;
+          firstTrade?: boolean | null;
+        };
+        buttons?: {
+          deposit?: boolean | null;
+          withdraw?: boolean | null;
+          buyFiat?: boolean | null;
+        };
+        tabs?: {
+          assets?: boolean | null;
+          popular?: boolean | null;
+          newListing?: boolean | null;
+          favorites?: boolean | null;
+          gainers?: boolean | null;
+          volume?: boolean | null;
+        };
+        newListingSymbols?:
+          | {
+              symbol: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -685,6 +729,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'site-system-status';
         value: number | SiteSystemStatus;
+      } | null)
+    | ({
+        relationTo: 'site-cabinet-home';
+        value: number | SiteCabinetHome;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -1153,6 +1201,53 @@ export interface SiteSystemStatusSelect<T extends boolean = true> {
         title?: T;
         status?: T;
         text?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-cabinet-home_select".
+ */
+export interface SiteCabinetHomeSelect<T extends boolean = true> {
+  site?: T;
+  modules?:
+    | T
+    | {
+        type?: T;
+        enabled?: T;
+        steps?:
+          | T
+          | {
+              verification?: T;
+              deposit?: T;
+              firstTrade?: T;
+            };
+        buttons?:
+          | T
+          | {
+              deposit?: T;
+              withdraw?: T;
+              buyFiat?: T;
+            };
+        tabs?:
+          | T
+          | {
+              assets?: T;
+              popular?: T;
+              newListing?: T;
+              favorites?: T;
+              gainers?: T;
+              volume?: T;
+            };
+        newListingSymbols?:
+          | T
+          | {
+              symbol?: T;
+              id?: T;
+            };
         id?: T;
       };
   updatedAt?: T;

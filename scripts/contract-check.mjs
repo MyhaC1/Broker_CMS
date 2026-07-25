@@ -17,7 +17,7 @@ const FIXTURES = join(process.cwd(), 'contract', 'fixtures');
 const RESOURCES = [
   'brand', 'navigation', 'faq', 'instruments', 'accounts', 'promotions',
   'partners', 'academy', 'streams', 'articles', 'contacts', 'careers',
-  'legal', 'system-status',
+  'legal', 'system-status', 'cabinet-home',
 ];
 
 const ISO_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/;

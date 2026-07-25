@@ -209,6 +209,21 @@ const CONTENT_BUILDERS: Record<string, { collection: string; build: (f: any) => 
       incidents: f.incidents,
     }),
   },
+  'cabinet-home': {
+    collection: 'site-cabinet-home',
+    build: (f) => ({
+      modules: f.modules.map((m: any) => ({
+        type: m.type,
+        enabled: m.enabled,
+        ...(m.steps ? { steps: m.steps } : {}),
+        ...(m.buttons ? { buttons: m.buttons } : {}),
+        ...(m.tabs ? { tabs: m.tabs } : {}),
+        ...(m.newListingSymbols
+          ? { newListingSymbols: m.newListingSymbols.map((symbol: string) => ({ symbol })) }
+          : {}),
+      })),
+    }),
+  },
 }
 
 for (const [resource, def] of Object.entries(CONTENT_BUILDERS)) {

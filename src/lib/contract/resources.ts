@@ -2,6 +2,7 @@ import {
   mapAcademy,
   mapAccounts,
   mapBrand,
+  mapCabinetHome,
   mapCareers,
   mapContacts,
   mapFaq,
@@ -33,4 +34,5 @@ export const RESOURCE_MAPPERS: Record<string, (doc: Record<string, any>) => unkn
   careers: mapCareers,
   legal: mapLegal,
   'system-status': mapSystemStatus,
+  'cabinet-home': mapCabinetHome,
 }

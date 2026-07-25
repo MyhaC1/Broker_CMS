@@ -33,16 +33,22 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ path: string[] }> },
 ) {
-  const expectedKey = process.env.CMS_API_KEY
-  if (expectedKey && request.headers.get('x-api-key') !== expectedKey) {
-    return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
-  }
-
   const { path: segments } = await params
   const url = new URL(request.url)
   const locale: 'ru' | 'en' = url.searchParams.get('locale') === 'en' ? 'en' : 'ru'
   const draft = url.searchParams.get('draft') === 'true'
   const resource = segments[0] ?? ''
+
+  // Публичное исключение: brand?site= читают браузеры (загрузчик темы терминала,
+  // в т.ч. ДО логина, когда postMessage-токена ещё нет). Бренд публичен по
+  // определению — он виден на публичном сайте; остальной контракт под ключом.
+  const isPublicBrand =
+    resource === 'brand' && segments.length === 1 && Boolean(url.searchParams.get('site')) && !draft
+
+  const expectedKey = process.env.CMS_API_KEY
+  if (!isPublicBrand && expectedKey && request.headers.get('x-api-key') !== expectedKey) {
+    return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
+  }
 
   try {
     const payload = await getPayload({ config })
@@ -70,7 +76,15 @@ export async function GET(
         console.error(`[contract] brand?site=${siteSlug} violates schema:`, check.errors)
         return NextResponse.json({ error: 'contract_violation', details: check.errors }, { status: 500 })
       }
-      return jsonWithVersion(dto, site.updatedAt)
+      // Публичная ручка читается браузером терминала с другого origin — CORS открыт
+      // (только здесь: публичные данные, только GET)
+      return NextResponse.json(dto, {
+        headers: {
+          'Cache-Control': 'public, max-age=60',
+          'X-Content-Version': String(site.updatedAt ?? ''),
+          'Access-Control-Allow-Origin': '*',
+        },
+      })
     }
 
     // Деталка статьи: /v1/cms/articles/{slug}

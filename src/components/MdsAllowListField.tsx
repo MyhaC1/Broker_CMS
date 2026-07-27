@@ -18,9 +18,21 @@ interface MdsInstrument {
   name: string
   group?: string
   icon?: string | null
+  provider?: string
 }
 
 const MAX_RENDER = 300
+
+/** Человекочитаемые названия провайдеров данных для фильтра «по API». */
+const PROVIDER_LABELS: Record<string, string> = {
+  binance: 'Binance',
+  twelvedata: 'Twelve Data',
+  custom: 'Свой инструмент',
+}
+
+function providerLabel(id?: string): string {
+  return id ? (PROVIDER_LABELS[id] ?? id) : 'Прочее'
+}
 
 const panelStyle: React.CSSProperties = {
   flex: '1 1 320px',
@@ -106,6 +118,7 @@ function InstrumentPanel({
   title,
   items,
   groups,
+  providers,
   emptyText,
   actionLabel,
   onAction,
@@ -116,6 +129,7 @@ function InstrumentPanel({
   title: string
   items: MdsInstrument[]
   groups: string[]
+  providers: string[]
   emptyText: string
   actionLabel: string
   onAction: (symbol: string) => void
@@ -125,15 +139,17 @@ function InstrumentPanel({
 }) {
   const [query, setQuery] = useState('')
   const [group, setGroup] = useState('')
+  const [provider, setProvider] = useState('')
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
     return items.filter((i) => {
       if (group && (i.group ?? 'Прочее') !== group) return false
+      if (provider && (i.provider ?? '') !== provider) return false
       if (!q) return true
       return i.symbol.toLowerCase().includes(q) || i.name.toLowerCase().includes(q)
     })
-  }, [items, query, group])
+  }, [items, query, group, provider])
 
   const visible = filtered.slice(0, MAX_RENDER)
 
@@ -154,14 +170,14 @@ function InstrumentPanel({
           </button>
         )}
       </div>
+      <input
+        type="search"
+        placeholder="Поиск: символ или название…"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        style={inputStyle}
+      />
       <div style={{ display: 'flex', gap: '6px' }}>
-        <input
-          type="search"
-          placeholder="Поиск: символ или название…"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          style={{ ...inputStyle, flex: 2 }}
-        />
         <select value={group} onChange={(e) => setGroup(e.target.value)} style={{ ...inputStyle, flex: 1 }}>
           <option value="">Все типы</option>
           {groups.map((g) => (
@@ -170,6 +186,21 @@ function InstrumentPanel({
             </option>
           ))}
         </select>
+        {providers.length > 1 && (
+          <select
+            value={provider}
+            onChange={(e) => setProvider(e.target.value)}
+            style={{ ...inputStyle, flex: 1 }}
+            title="Фильтр по источнику данных (API)"
+          >
+            <option value="">Все API</option>
+            {providers.map((p) => (
+              <option key={p} value={p}>
+                {providerLabel(p)}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
       <div style={listStyle}>
         {visible.map((i) => {
@@ -263,6 +294,9 @@ export function MdsAllowListField({ path }: { path: string }) {
   const groupsOf = (items: MdsInstrument[]) => [
     ...new Set(items.map((i) => i.group ?? 'Прочее')),
   ]
+  const providersOf = (items: MdsInstrument[]) => [
+    ...new Set(items.map((i) => i.provider).filter((p): p is string => Boolean(p))),
+  ]
 
   const add = (symbols: string[]) => setValue([...new Set([...selected, ...symbols])])
   const remove = (symbols: string[]) => {
@@ -294,6 +328,7 @@ export function MdsAllowListField({ path }: { path: string }) {
             title="Доступные"
             items={available}
             groups={groupsOf(available)}
+            providers={providersOf(available)}
             emptyText={available.length === 0 ? 'Вся вселенная уже выбрана' : 'Ничего не найдено'}
             actionLabel="+"
             onAction={(s) => add([s])}
@@ -304,6 +339,7 @@ export function MdsAllowListField({ path }: { path: string }) {
             title="Выбранные"
             items={chosen}
             groups={groupsOf(chosen)}
+            providers={providersOf(chosen)}
             emptyText={
               chosen.length === 0
                 ? 'Пока ничего не выбрано — сайт без инструментов'

@@ -86,6 +86,8 @@ export async function GET(
           slug: String(site.slug),
           name: String(site.name ?? ''),
           demoStartBalanceCents: Number(site.demoStartBalanceCents ?? 1000000),
+          // Доступ сайта к вселенной MDS (allow-list канонических символов)
+          instruments: Array.isArray(site.instruments) ? site.instruments.map(String) : [],
         },
         site.updatedAt,
       )

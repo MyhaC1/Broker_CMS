@@ -210,6 +210,18 @@ export interface Site {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Доступ сайта к вселенной MDS: сайт получает котировки и может показывать только выбранные инструменты
+   */
+  instruments?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   demoStartBalanceCents: number;
   /**
    * Пусто — используется SITE_WEBHOOK_URL из окружения
@@ -228,7 +240,7 @@ export interface Site {
  */
 export interface Article {
   id: number;
-  site: number | Site;
+  site?: (number | null) | Site;
   slug: string;
   title: string;
   excerpt: string;
@@ -247,7 +259,7 @@ export interface Article {
  */
 export interface SiteNavigation {
   id: number;
-  site: number | Site;
+  site?: (number | null) | Site;
   header?:
     | {
         label: string;
@@ -279,7 +291,7 @@ export interface SiteNavigation {
  */
 export interface SiteFaq {
   id: number;
-  site: number | Site;
+  site?: (number | null) | Site;
   sections?:
     | {
         title: string;
@@ -303,7 +315,7 @@ export interface SiteFaq {
  */
 export interface SiteInstrument {
   id: number;
-  site: number | Site;
+  site?: (number | null) | Site;
   items?:
     | {
         symbol: string;
@@ -327,7 +339,7 @@ export interface SiteInstrument {
  */
 export interface SiteAccount {
   id: number;
-  site: number | Site;
+  site?: (number | null) | Site;
   items?:
     | {
         planId: string;
@@ -359,7 +371,7 @@ export interface SiteAccount {
  */
 export interface SitePromotion {
   id: number;
-  site: number | Site;
+  site?: (number | null) | Site;
   items?:
     | {
         promoId: string;
@@ -385,7 +397,7 @@ export interface SitePromotion {
  */
 export interface SitePartner {
   id: number;
-  site: number | Site;
+  site?: (number | null) | Site;
   models?:
     | {
         name: string;
@@ -425,7 +437,7 @@ export interface SitePartner {
  */
 export interface SiteAcademy {
   id: number;
-  site: number | Site;
+  site?: (number | null) | Site;
   articles?:
     | {
         slug: string;
@@ -467,7 +479,7 @@ export interface SiteAcademy {
  */
 export interface SiteStream {
   id: number;
-  site: number | Site;
+  site?: (number | null) | Site;
   items?:
     | {
         provider: 'youtube' | 'vimeo';
@@ -489,7 +501,7 @@ export interface SiteStream {
  */
 export interface SiteContact {
   id: number;
-  site: number | Site;
+  site?: (number | null) | Site;
   channels?:
     | {
         title: string;
@@ -516,7 +528,7 @@ export interface SiteContact {
  */
 export interface SiteCareer {
   id: number;
-  site: number | Site;
+  site?: (number | null) | Site;
   benefits?:
     | {
         title: string;
@@ -544,7 +556,7 @@ export interface SiteCareer {
  */
 export interface SiteLegal {
   id: number;
-  site: number | Site;
+  site?: (number | null) | Site;
   items?:
     | {
         slug: string;
@@ -576,7 +588,7 @@ export interface SiteLegal {
  */
 export interface SiteSystemStatus {
   id: number;
-  site: number | Site;
+  site?: (number | null) | Site;
   services?:
     | {
         serviceId: string;
@@ -606,7 +618,7 @@ export interface SiteSystemStatus {
  */
 export interface SiteCabinetHome {
   id: number;
-  site: number | Site;
+  site?: (number | null) | Site;
   modules?:
     | {
         type: 'profile' | 'onboarding' | 'balance' | 'markets' | 'promotions';
@@ -834,6 +846,7 @@ export interface SitesSelect<T extends boolean = true> {
         url?: T;
         id?: T;
       };
+  instruments?: T;
   demoStartBalanceCents?: T;
   webhookUrl?: T;
   webhookSecret?: T;

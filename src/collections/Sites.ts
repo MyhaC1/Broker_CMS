@@ -74,6 +74,17 @@ export const Sites: CollectionConfig = {
       ],
     },
     {
+      name: 'instruments',
+      type: 'json',
+      defaultValue: [],
+      label: 'Инструменты сайта',
+      admin: {
+        components: { Field: '/components/MdsAllowListField#MdsAllowListField' },
+        description:
+          'Доступ сайта к вселенной MDS: сайт получает котировки и может показывать только выбранные инструменты',
+      },
+    },
+    {
       name: 'demoStartBalanceCents',
       type: 'number',
       required: true,

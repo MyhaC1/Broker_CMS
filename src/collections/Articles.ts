@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { siteListFilter } from '../lib/active-site'
 import { notifyAfterChange } from '../lib/notify-site'
 import { sitePreviewUrlFor } from '../lib/preview-url'
 
@@ -13,7 +14,9 @@ export const Articles: CollectionConfig = {
   labels: { singular: 'Статья', plural: 'Статьи' },
   admin: {
     useAsTitle: 'title',
+    group: 'Контент',
     defaultColumns: ['title', 'category', 'publishedAt', '_status'],
+    baseListFilter: siteListFilter,
     preview: sitePreviewUrlFor((doc) => `/blog/${doc.slug ?? ''}`),
   },
   versions: { drafts: { autosave: { interval: 1000 } } },

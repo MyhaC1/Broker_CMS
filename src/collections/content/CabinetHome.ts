@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { siteListFilter } from '../../lib/active-site'
 import { notifyContentChange } from '../../lib/notify-site'
 
 /**
@@ -21,6 +22,7 @@ export const CabinetHome: CollectionConfig = {
     useAsTitle: 'site',
     group: 'Кабинет',
     defaultColumns: ['site', 'updatedAt', '_status'],
+    baseListFilter: siteListFilter,
   },
   versions: { drafts: true },
   hooks: {

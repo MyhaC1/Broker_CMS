@@ -1,5 +1,6 @@
 import type { CollectionConfig, Field } from 'payload'
 
+import { siteListFilter } from '../../lib/active-site'
 import { notifyContentChange } from '../../lib/notify-site'
 import { sitePreviewUrl } from '../../lib/preview-url'
 
@@ -29,6 +30,8 @@ export function makeSiteContentCollection(def: SiteContentDef): CollectionConfig
       useAsTitle: 'site',
       group: 'Контент',
       defaultColumns: ['site', 'updatedAt', '_status'],
+      // Списки показывают только рабочий сайт (выбор — на дашборде)
+      baseListFilter: siteListFilter,
       ...(def.previewPath ? { preview: sitePreviewUrl(def.previewPath) } : {}),
     },
     versions: { drafts: true },

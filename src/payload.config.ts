@@ -20,6 +20,16 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    components: {
+      // Дашборд = экран выбора рабочего сайта (карточки с метаданными)
+      views: {
+        dashboard: {
+          Component: '/components/SiteDashboard#SiteDashboard',
+        },
+      },
+      // Бейдж рабочего сайта над навигацией
+      beforeNavLinks: ['/components/ActiveSiteBadge#ActiveSiteBadge'],
+    },
   },
   // Мульти-тенантность: бывшие глобалы — per-site коллекции (один док на сайт);
   // бренд — поля карточки sites; глобалов в конфиге больше нет

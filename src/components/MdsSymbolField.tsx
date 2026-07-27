@@ -15,6 +15,7 @@ interface MdsInstrument {
   name: string
   category: string
   digits: number
+  icon?: string | null
 }
 
 export function MdsSymbolField({ path }: { path: string }) {
@@ -65,20 +66,40 @@ export function MdsSymbolField({ path }: { path: string }) {
         Символ (из вселенной MDS)
       </label>
       {items ? (
-        <select value={value ?? ''} onChange={(e) => onSelect(e.target.value)} style={inputStyle}>
-          <option value="" disabled>
-            — выберите инструмент —
-          </option>
-          {/* текущее значение, которого больше нет в MDS, не теряем */}
-          {value && !items.some((i) => i.symbol === value) && (
-            <option value={value}>{value} (нет в MDS)</option>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* Иконка выбранной монеты — из MDS через прокси CMS */}
+          {value && items.find((i) => i.symbol === value)?.icon && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={`/admin-mds/icons/${value}.svg`}
+              alt=""
+              width={28}
+              height={28}
+              style={{ flexShrink: 0, borderRadius: '50%' }}
+              onError={(e) => {
+                ;(e.target as HTMLImageElement).style.display = 'none'
+              }}
+            />
           )}
-          {items.map((i) => (
-            <option key={i.symbol} value={i.symbol}>
-              {i.symbol} — {i.name}
+          <select
+            value={value ?? ''}
+            onChange={(e) => onSelect(e.target.value)}
+            style={{ ...inputStyle, flex: 1 }}
+          >
+            <option value="" disabled>
+              — выберите инструмент —
             </option>
-          ))}
-        </select>
+            {/* текущее значение, которого больше нет в MDS, не теряем */}
+            {value && !items.some((i) => i.symbol === value) && (
+              <option value={value}>{value} (нет в MDS)</option>
+            )}
+            {items.map((i) => (
+              <option key={i.symbol} value={i.symbol}>
+                {i.symbol} — {i.name}
+              </option>
+            ))}
+          </select>
+        </div>
       ) : (
         <>
           <input

@@ -32,7 +32,12 @@ export const instrumentsFields: Field[] = [
         { name: 'leverageMax', type: 'text', required: true, label: 'Макс. плечо (1:500)' },
         { name: 'spreadFrom', type: 'text', required: true, label: 'Спред от' },
         { name: 'swapFree', type: 'checkbox', defaultValue: true, label: 'Своп-фри' },
-        { name: 'icon', type: 'upload', relationTo: 'media', label: 'Иконка' },
+        {
+          name: 'icon',
+          type: 'upload',
+          relationTo: 'media',
+          label: 'Иконка (необязательно — сайт сам берёт иконку монеты из MDS)',
+        },
       ],
     },
   ]

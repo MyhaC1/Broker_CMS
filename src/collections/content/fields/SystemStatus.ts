@@ -1,20 +1,7 @@
-import type { GlobalConfig } from 'payload'
+import type { Field } from 'payload'
 
-import { notifyAfterChange } from '../lib/notify-site'
-import { sitePreviewUrl } from '../lib/preview-url'
-
-/** Контракт: cms.system-status — статусы сервисов и журнал инцидентов. */
-export const SystemStatus: GlobalConfig = {
-  slug: 'system-status',
-  label: 'Статус сервисов',
-  versions: { drafts: { autosave: { interval: 1000 } } },
-  admin: {
-    preview: sitePreviewUrl('/status'),
-  },
-  hooks: {
-    afterChange: [notifyAfterChange(['cms:system-status'])],
-  },
-  fields: [
+/** Поля раздела «SystemStatus» (per-site коллекция, бывший глобал). */
+export const systemStatusFields: Field[] = [
     {
       name: 'services',
       type: 'array',
@@ -51,5 +38,4 @@ export const SystemStatus: GlobalConfig = {
         { name: 'text', type: 'textarea', required: true, label: 'Описание' },
       ],
     },
-  ],
-}
+  ]

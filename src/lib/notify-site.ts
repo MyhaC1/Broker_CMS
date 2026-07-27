@@ -111,16 +111,3 @@ export const notifyContentChange =
     return doc
   }
 
-/**
- * Старый хук глобалов (файлы глобалов остаются источником полей —
- * их конфиги больше не регистрируются, но импорты должны собираться).
- */
-export const notifyAfterChange =
-  (tags: string[]) =>
-  ({ doc, req }: { doc: Record<string, unknown>; req?: { url?: string | null } }) => {
-    const status = doc?._status
-    const isVersionRestore = typeof req?.url === 'string' && req.url.includes('/versions/')
-    if (!isVersionRestore && status !== undefined && status !== 'published') return doc
-    void notifySite(tags)
-    return doc
-  }

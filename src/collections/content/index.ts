@@ -1,108 +1,106 @@
-import { Academy } from '../../globals/Academy'
-import { Accounts } from '../../globals/Accounts'
-import { Careers } from '../../globals/Careers'
-import { Contacts } from '../../globals/Contacts'
-import { Faq } from '../../globals/Faq'
-import { Instruments } from '../../globals/Instruments'
-import { Legal } from '../../globals/Legal'
-import { Navigation } from '../../globals/Navigation'
-import { Partners } from '../../globals/Partners'
-import { Promotions } from '../../globals/Promotions'
-import { Streams } from '../../globals/Streams'
-import { SystemStatus } from '../../globals/SystemStatus'
 import { CabinetHome } from './CabinetHome'
 import { makeSiteContentCollection } from './factory'
+import { academyFields } from './fields/Academy'
+import { accountsFields } from './fields/Accounts'
+import { careersFields } from './fields/Careers'
+import { contactsFields } from './fields/Contacts'
+import { faqFields } from './fields/Faq'
+import { instrumentsFields } from './fields/Instruments'
+import { legalFields } from './fields/Legal'
+import { navigationFields } from './fields/Navigation'
+import { partnersFields } from './fields/Partners'
+import { promotionsFields } from './fields/Promotions'
+import { streamsFields } from './fields/Streams'
+import { systemStatusFields } from './fields/SystemStatus'
 
 /**
- * Per-site контентные коллекции. Определения ПОЛЕЙ переиспользуются из
- * бывших глобалов (src/globals/* остаются как источник полей — сами глобалы
- * из конфига убраны; их hooks/admin фабрика игнорирует).
- * brand НЕ здесь: бренд — поля карточки сайта (коллекция sites).
- * articles НЕ здесь: у статей своя коллекция (site-поле добавлено ей самой).
+ * Per-site контентные коллекции. Поля — в content/fields/* (чистые
+ * field-модули; глобалов больше нет). brand — поля карточки sites;
+ * articles — своя коллекция с site-полем.
  */
 export const CONTENT_COLLECTIONS = [
   makeSiteContentCollection({
     collectionSlug: 'site-navigation',
     resource: 'navigation',
     label: 'Навигация',
-    fields: Navigation.fields,
+    fields: navigationFields,
     previewPath: '/',
   }),
   makeSiteContentCollection({
     collectionSlug: 'site-faq',
     resource: 'faq',
     label: 'FAQ',
-    fields: Faq.fields,
+    fields: faqFields,
     previewPath: '/education/faq',
   }),
   makeSiteContentCollection({
     collectionSlug: 'site-instruments',
     resource: 'instruments',
     label: 'Инструменты',
-    fields: Instruments.fields,
+    fields: instrumentsFields,
     previewPath: '/instruments',
   }),
   makeSiteContentCollection({
     collectionSlug: 'site-accounts',
     resource: 'accounts',
     label: 'Типы счетов',
-    fields: Accounts.fields,
+    fields: accountsFields,
     previewPath: '/accounts',
   }),
   makeSiteContentCollection({
     collectionSlug: 'site-promotions',
     resource: 'promotions',
     label: 'Акции',
-    fields: Promotions.fields,
+    fields: promotionsFields,
     previewPath: '/promotions',
   }),
   makeSiteContentCollection({
     collectionSlug: 'site-partners',
     resource: 'partners',
     label: 'Партнёрам',
-    fields: Partners.fields,
+    fields: partnersFields,
     previewPath: '/partners',
   }),
   makeSiteContentCollection({
     collectionSlug: 'site-academy',
     resource: 'academy',
     label: 'Обучение',
-    fields: Academy.fields,
+    fields: academyFields,
     previewPath: '/education',
   }),
   makeSiteContentCollection({
     collectionSlug: 'site-streams',
     resource: 'streams',
     label: 'Эфиры',
-    fields: Streams.fields,
+    fields: streamsFields,
     previewPath: '/education/webinars',
   }),
   makeSiteContentCollection({
     collectionSlug: 'site-contacts',
     resource: 'contacts',
     label: 'Контакты',
-    fields: Contacts.fields,
+    fields: contactsFields,
     previewPath: '/company/contacts',
   }),
   makeSiteContentCollection({
     collectionSlug: 'site-careers',
     resource: 'careers',
     label: 'Карьера',
-    fields: Careers.fields,
+    fields: careersFields,
     previewPath: '/company/careers',
   }),
   makeSiteContentCollection({
     collectionSlug: 'site-legal',
     resource: 'legal',
     label: 'Правовые документы',
-    fields: Legal.fields,
+    fields: legalFields,
     previewPath: '/legal/privacy',
   }),
   makeSiteContentCollection({
     collectionSlug: 'site-system-status',
     resource: 'system-status',
     label: 'Статус сервисов',
-    fields: SystemStatus.fields,
+    fields: systemStatusFields,
     previewPath: '/status',
   }),
   CabinetHome,

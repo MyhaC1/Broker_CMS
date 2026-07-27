@@ -1,20 +1,7 @@
-import type { GlobalConfig } from 'payload'
+import type { Field } from 'payload'
 
-import { notifyAfterChange } from '../lib/notify-site'
-import { sitePreviewUrl } from '../lib/preview-url'
-
-/** Контракт: cms.streams — прямые эфиры и записи (YouTube/Vimeo). */
-export const Streams: GlobalConfig = {
-  slug: 'streams',
-  label: 'Эфиры',
-  versions: { drafts: { autosave: { interval: 1000 } } },
-  admin: {
-    preview: sitePreviewUrl('/education/webinars'),
-  },
-  hooks: {
-    afterChange: [notifyAfterChange(['cms:streams'])],
-  },
-  fields: [
+/** Поля раздела «Streams» (per-site коллекция, бывший глобал). */
+export const streamsFields: Field[] = [
     {
       name: 'items',
       type: 'array',
@@ -44,5 +31,4 @@ export const Streams: GlobalConfig = {
         },
       ],
     },
-  ],
-}
+  ]

@@ -1,20 +1,7 @@
-import type { GlobalConfig } from 'payload'
+import type { Field } from 'payload'
 
-import { notifyAfterChange } from '../lib/notify-site'
-import { sitePreviewUrl } from '../lib/preview-url'
-
-/** Контракт: cms.faq — секции вопросов-ответов страницы /education/faq. */
-export const Faq: GlobalConfig = {
-  slug: 'faq',
-  label: 'FAQ',
-  versions: { drafts: { autosave: { interval: 1000 } } },
-  admin: {
-    preview: sitePreviewUrl('/education/faq'),
-  },
-  hooks: {
-    afterChange: [notifyAfterChange(['cms:faq'])],
-  },
-  fields: [
+/** Поля раздела «Faq» (per-site коллекция, бывший глобал). */
+export const faqFields: Field[] = [
     {
       name: 'sections',
       type: 'array',
@@ -37,5 +24,4 @@ export const Faq: GlobalConfig = {
         },
       ],
     },
-  ],
-}
+  ]

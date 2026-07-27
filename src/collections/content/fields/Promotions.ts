@@ -1,20 +1,7 @@
-import type { GlobalConfig } from 'payload'
+import type { Field } from 'payload'
 
-import { notifyAfterChange } from '../lib/notify-site'
-import { sitePreviewUrl } from '../lib/preview-url'
-
-/** Контракт: cms.promotions — акции и бонусы. */
-export const Promotions: GlobalConfig = {
-  slug: 'promotions',
-  label: 'Акции',
-  versions: { drafts: { autosave: { interval: 1000 } } },
-  admin: {
-    preview: sitePreviewUrl('/promotions'),
-  },
-  hooks: {
-    afterChange: [notifyAfterChange(['cms:promotions'])],
-  },
-  fields: [
+/** Поля раздела «Promotions» (per-site коллекция, бывший глобал). */
+export const promotionsFields: Field[] = [
     {
       name: 'items',
       type: 'array',
@@ -35,5 +22,4 @@ export const Promotions: GlobalConfig = {
         { name: 'activeTo', type: 'date', label: 'Активна до' },
       ],
     },
-  ],
-}
+  ]

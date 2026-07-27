@@ -1,20 +1,7 @@
-import type { GlobalConfig } from 'payload'
+import type { Field } from 'payload'
 
-import { notifyAfterChange } from '../lib/notify-site'
-import { sitePreviewUrl } from '../lib/preview-url'
-
-/** Контракт: cms.partners — партнёрская программа (модели, уровни, шаги). */
-export const Partners: GlobalConfig = {
-  slug: 'partners',
-  label: 'Партнёрам',
-  versions: { drafts: { autosave: { interval: 1000 } } },
-  admin: {
-    preview: sitePreviewUrl('/partners'),
-  },
-  hooks: {
-    afterChange: [notifyAfterChange(['cms:partners'])],
-  },
-  fields: [
+/** Поля раздела «Partners» (per-site коллекция, бывший глобал). */
+export const partnersFields: Field[] = [
     {
       name: 'models',
       type: 'array',
@@ -61,5 +48,4 @@ export const Partners: GlobalConfig = {
         { name: 'text', type: 'text', required: true, label: 'Текст' },
       ],
     },
-  ],
-}
+  ]

@@ -1,20 +1,7 @@
-import type { GlobalConfig } from 'payload'
+import type { Field } from 'payload'
 
-import { notifyAfterChange } from '../lib/notify-site'
-import { sitePreviewUrl } from '../lib/preview-url'
-
-/** Контракт: cms.navigation — меню шапки и колонки футера с дисклеймером. */
-export const Navigation: GlobalConfig = {
-  slug: 'navigation',
-  label: 'Навигация',
-  versions: { drafts: { autosave: { interval: 1000 } } },
-  admin: {
-    preview: sitePreviewUrl('/'),
-  },
-  hooks: {
-    afterChange: [notifyAfterChange(['cms:navigation'])],
-  },
-  fields: [
+/** Поля раздела «Navigation» (per-site коллекция, бывший глобал). */
+export const navigationFields: Field[] = [
     {
       name: 'header',
       type: 'array',
@@ -56,5 +43,4 @@ export const Navigation: GlobalConfig = {
       required: true,
       label: 'Предупреждение о рисках (футер)',
     },
-  ],
-}
+  ]

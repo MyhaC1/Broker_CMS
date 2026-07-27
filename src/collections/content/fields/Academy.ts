@@ -1,20 +1,7 @@
-import type { GlobalConfig } from 'payload'
+import type { Field } from 'payload'
 
-import { notifyAfterChange } from '../lib/notify-site'
-import { sitePreviewUrl } from '../lib/preview-url'
-
-/** Контракт: cms.academy — обучение: статьи, вебинары, глоссарий. */
-export const Academy: GlobalConfig = {
-  slug: 'academy',
-  label: 'Обучение',
-  versions: { drafts: { autosave: { interval: 1000 } } },
-  admin: {
-    preview: sitePreviewUrl('/education'),
-  },
-  hooks: {
-    afterChange: [notifyAfterChange(['cms:academy'])],
-  },
-  fields: [
+/** Поля раздела «Academy» (per-site коллекция, бывший глобал). */
+export const academyFields: Field[] = [
     {
       name: 'articles',
       type: 'array',
@@ -67,5 +54,4 @@ export const Academy: GlobalConfig = {
         { name: 'definition', type: 'textarea', required: true, label: 'Определение' },
       ],
     },
-  ],
-}
+  ]

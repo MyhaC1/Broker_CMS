@@ -1,20 +1,7 @@
-import type { GlobalConfig } from 'payload'
+import type { Field } from 'payload'
 
-import { notifyAfterChange } from '../lib/notify-site'
-import { sitePreviewUrl } from '../lib/preview-url'
-
-/** Контракт: cms.legal — правовые документы (privacy, terms, risk-disclosure…). */
-export const Legal: GlobalConfig = {
-  slug: 'legal',
-  label: 'Правовые документы',
-  versions: { drafts: { autosave: { interval: 1000 } } },
-  admin: {
-    preview: sitePreviewUrl('/legal/privacy'),
-  },
-  hooks: {
-    afterChange: [notifyAfterChange(['cms:legal'])],
-  },
-  fields: [
+/** Поля раздела «Legal» (per-site коллекция, бывший глобал). */
+export const legalFields: Field[] = [
     {
       name: 'items',
       type: 'array',
@@ -48,5 +35,4 @@ export const Legal: GlobalConfig = {
         },
       ],
     },
-  ],
-}
+  ]

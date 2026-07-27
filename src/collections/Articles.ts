@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { fillSiteFromActive, siteListFilter } from '../lib/active-site'
-import { notifyAfterChange } from '../lib/notify-site'
+import { notifyContentChange } from '../lib/notify-site'
 import { sitePreviewUrlFor } from '../lib/preview-url'
 
 /**
@@ -21,7 +21,8 @@ export const Articles: CollectionConfig = {
   },
   versions: { drafts: { autosave: { interval: 1000 } } },
   hooks: {
-    afterChange: [notifyAfterChange(['cms:articles'])],
+    // per-site вебхук: правка статьи demo не должна дёргать кеш apex-ru
+    afterChange: [notifyContentChange('articles')],
     beforeValidate: [fillSiteFromActive],
   },
   fields: [

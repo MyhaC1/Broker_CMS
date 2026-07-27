@@ -1,20 +1,7 @@
-import type { GlobalConfig } from 'payload'
+import type { Field } from 'payload'
 
-import { notifyAfterChange } from '../lib/notify-site'
-import { sitePreviewUrl } from '../lib/preview-url'
-
-/** Контракт: cms.instruments — торговые инструменты (allow-list для WS-подписок сайта). */
-export const Instruments: GlobalConfig = {
-  slug: 'instruments',
-  label: 'Инструменты',
-  versions: { drafts: { autosave: { interval: 1000 } } },
-  admin: {
-    preview: sitePreviewUrl('/instruments'),
-  },
-  hooks: {
-    afterChange: [notifyAfterChange(['cms:instruments'])],
-  },
-  fields: [
+/** Поля раздела «Instruments» (per-site коллекция, бывший глобал). */
+export const instrumentsFields: Field[] = [
     {
       name: 'items',
       type: 'array',
@@ -23,7 +10,16 @@ export const Instruments: GlobalConfig = {
       labels: { singular: 'Инструмент', plural: 'Инструменты' },
       admin: { components: { RowLabel: '/components/RowLabel#ArrayRowLabel' } },
       fields: [
-        { name: 'symbol', type: 'text', required: true, label: 'Символ (EURUSD…)' },
+        {
+          name: 'symbol',
+          type: 'text',
+          required: true,
+          label: 'Символ (EURUSD…)',
+          admin: {
+            // Выбор из вселенной MDS + автозаполнение name/category/digits
+            components: { Field: '/components/MdsSymbolField#MdsSymbolField' },
+          },
+        },
         { name: 'name', type: 'text', required: true, label: 'Название' },
         {
           name: 'category',
@@ -39,5 +35,4 @@ export const Instruments: GlobalConfig = {
         { name: 'icon', type: 'upload', relationTo: 'media', label: 'Иконка' },
       ],
     },
-  ],
-}
+  ]

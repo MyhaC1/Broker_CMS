@@ -1,20 +1,7 @@
-import type { GlobalConfig } from 'payload'
+import type { Field } from 'payload'
 
-import { notifyAfterChange } from '../lib/notify-site'
-import { sitePreviewUrl } from '../lib/preview-url'
-
-/** Контракт: cms.contacts — каналы связи и офисы. */
-export const Contacts: GlobalConfig = {
-  slug: 'contacts',
-  label: 'Контакты',
-  versions: { drafts: { autosave: { interval: 1000 } } },
-  admin: {
-    preview: sitePreviewUrl('/company/contacts'),
-  },
-  hooks: {
-    afterChange: [notifyAfterChange(['cms:contacts'])],
-  },
-  fields: [
+/** Поля раздела «Contacts» (per-site коллекция, бывший глобал). */
+export const contactsFields: Field[] = [
     {
       name: 'channels',
       type: 'array',
@@ -41,5 +28,4 @@ export const Contacts: GlobalConfig = {
         { name: 'address', type: 'text', required: true, label: 'Адрес' },
       ],
     },
-  ],
-}
+  ]

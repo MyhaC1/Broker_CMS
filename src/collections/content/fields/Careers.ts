@@ -1,20 +1,7 @@
-import type { GlobalConfig } from 'payload'
+import type { Field } from 'payload'
 
-import { notifyAfterChange } from '../lib/notify-site'
-import { sitePreviewUrl } from '../lib/preview-url'
-
-/** Контракт: cms.careers — преимущества и вакансии. */
-export const Careers: GlobalConfig = {
-  slug: 'careers',
-  label: 'Карьера',
-  versions: { drafts: { autosave: { interval: 1000 } } },
-  admin: {
-    preview: sitePreviewUrl('/company/careers'),
-  },
-  hooks: {
-    afterChange: [notifyAfterChange(['cms:careers'])],
-  },
-  fields: [
+/** Поля раздела «Careers» (per-site коллекция, бывший глобал). */
+export const careersFields: Field[] = [
     {
       name: 'benefits',
       type: 'array',
@@ -42,5 +29,4 @@ export const Careers: GlobalConfig = {
         { name: 'applyEmail', type: 'email', required: true, label: 'Email для откликов' },
       ],
     },
-  ],
-}
+  ]

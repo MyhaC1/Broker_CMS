@@ -26,6 +26,15 @@ export const Sites: CollectionConfig = {
         void notifySiteFor(site, tags)
         return doc
       },
+      async ({ doc, operation, req }) => {
+        // Новый сайт сразу получает каркас всех разделов (черновики)
+        if (operation === 'create') {
+          const { ensureSiteSkeleton } = await import('../lib/site-skeleton')
+          await ensureSiteSkeleton(req.payload, (doc as { id: string | number }).id)
+          console.info(`[sites] skeleton created for ${(doc as { slug?: string }).slug}`)
+        }
+        return doc
+      },
     ],
   },
   fields: [

@@ -27,8 +27,9 @@ export default buildConfig({
           Component: '/components/SiteDashboard#SiteDashboard',
         },
       },
-      // Бейдж рабочего сайта над навигацией
-      beforeNavLinks: ['/components/ActiveSiteBadge#ActiveSiteBadge'],
+      // Своя навигация: разделы появляются ПОСЛЕ выбора сайта и ведут
+      // напрямую в документ рабочего сайта (без промежуточных списков)
+      Nav: '/components/AdminNav#AdminNav',
     },
   },
   // Мульти-тенантность: бывшие глобалы — per-site коллекции (один док на сайт);

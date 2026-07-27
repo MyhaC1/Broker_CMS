@@ -16,6 +16,8 @@ interface MdsInstrument {
   category: string
   digits: number
   icon?: string | null
+  /** Метка группы из MDS («Акции — Европа») — группируем как по данным */
+  group?: string
 }
 
 export function MdsSymbolField({ path }: { path: string }) {
@@ -39,6 +41,19 @@ export function MdsSymbolField({ path }: { path: string }) {
   }, [])
 
   const rowBase = useMemo(() => path.slice(0, path.lastIndexOf('.') + 1), [path])
+
+  // Группы в порядке появления в каталоге MDS (вселенная растёт — новые
+  // группы появляются здесь сами, без правок CMS)
+  const groups = useMemo(() => {
+    const byGroup = new Map<string, MdsInstrument[]>()
+    for (const i of items ?? []) {
+      const key = i.group ?? 'Прочее'
+      const list = byGroup.get(key)
+      if (list) list.push(i)
+      else byGroup.set(key, [i])
+    }
+    return [...byGroup.entries()]
+  }, [items])
 
   const onSelect = (symbol: string) => {
     setValue(symbol)
@@ -93,10 +108,14 @@ export function MdsSymbolField({ path }: { path: string }) {
             {value && !items.some((i) => i.symbol === value) && (
               <option value={value}>{value} (нет в MDS)</option>
             )}
-            {items.map((i) => (
-              <option key={i.symbol} value={i.symbol}>
-                {i.symbol} — {i.name}
-              </option>
+            {groups.map(([group, groupItems]) => (
+              <optgroup key={group} label={group}>
+                {groupItems.map((i) => (
+                  <option key={i.symbol} value={i.symbol}>
+                    {i.symbol} — {i.name}
+                  </option>
+                ))}
+              </optgroup>
             ))}
           </select>
         </div>

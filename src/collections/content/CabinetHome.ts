@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { siteListFilter } from '../../lib/active-site'
+import { fillSiteFromActive, siteListFilter } from '../../lib/active-site'
 import { notifyContentChange } from '../../lib/notify-site'
 
 /**
@@ -27,6 +27,7 @@ export const CabinetHome: CollectionConfig = {
   versions: { drafts: true },
   hooks: {
     afterChange: [notifyContentChange('cabinet-home')],
+    beforeValidate: [fillSiteFromActive],
   },
   fields: [
     {
@@ -37,6 +38,9 @@ export const CabinetHome: CollectionConfig = {
       unique: true,
       index: true,
       label: 'Сайт',
+      admin: {
+        condition: () => false,
+      },
     },
     {
       name: 'modules',

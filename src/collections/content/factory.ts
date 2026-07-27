@@ -1,6 +1,6 @@
 import type { CollectionConfig, Field } from 'payload'
 
-import { siteListFilter } from '../../lib/active-site'
+import { fillSiteFromActive, siteListFilter } from '../../lib/active-site'
 import { notifyContentChange } from '../../lib/notify-site'
 import { sitePreviewUrl } from '../../lib/preview-url'
 
@@ -37,6 +37,8 @@ export function makeSiteContentCollection(def: SiteContentDef): CollectionConfig
     versions: { drafts: true },
     hooks: {
       afterChange: [notifyContentChange(def.resource)],
+      // Поле site скрыто из формы — заполняем из рабочего сайта админки
+      beforeValidate: [fillSiteFromActive],
     },
     fields: [
       {
@@ -48,6 +50,10 @@ export function makeSiteContentCollection(def: SiteContentDef): CollectionConfig
         unique: true,
         index: true,
         label: 'Сайт',
+        admin: {
+          // Рабочий сайт выбран на дашборде — в форме выбор не нужен
+          condition: () => false,
+        },
       },
       ...def.fields,
     ],

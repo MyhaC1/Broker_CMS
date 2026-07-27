@@ -15,7 +15,13 @@ export async function GET(request: Request) {
   const url = new URL(request.url)
   const slug = url.searchParams.get('site') ?? ''
 
-  const response = NextResponse.redirect(new URL('/admin', url.origin))
+  // Origin глазами БРАУЗЕРА (урок B-015): в standalone-контейнере url.origin —
+  // это 0.0.0.0, редирект туда браузер отвергает
+  const host = request.headers.get('x-forwarded-host') ?? request.headers.get('host')
+  const proto = request.headers.get('x-forwarded-proto') ?? 'http'
+  const origin = host ? `${proto}://${host}` : url.origin
+
+  const response = NextResponse.redirect(new URL('/admin', origin))
 
   if (/^[a-z0-9-]{2,32}$/.test(slug)) {
     const payload = await getPayload({ config })

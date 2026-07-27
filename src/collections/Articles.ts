@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { siteListFilter } from '../lib/active-site'
+import { fillSiteFromActive, siteListFilter } from '../lib/active-site'
 import { notifyAfterChange } from '../lib/notify-site'
 import { sitePreviewUrlFor } from '../lib/preview-url'
 
@@ -22,6 +22,7 @@ export const Articles: CollectionConfig = {
   versions: { drafts: { autosave: { interval: 1000 } } },
   hooks: {
     afterChange: [notifyAfterChange(['cms:articles'])],
+    beforeValidate: [fillSiteFromActive],
   },
   fields: [
     {
@@ -31,6 +32,10 @@ export const Articles: CollectionConfig = {
       required: true,
       index: true,
       label: 'Сайт',
+      admin: {
+        // Статья принадлежит рабочему сайту, выбранному на дашборде
+        condition: () => false,
+      },
     },
     // slug уникален В ПРЕДЕЛАХ сайта (поиск деталки фильтрует site+slug);
     // глобальный unique снят — одинаковые статьи на разных сайтах легальны

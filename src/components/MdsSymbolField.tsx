@@ -3,12 +3,20 @@
 import { useField, useFormFields } from '@payloadcms/ui'
 import React, { useEffect, useMemo, useState } from 'react'
 
+import { loadMdsInstruments, MDS_FAILURE_TEXT, type MdsFailureReason } from '@/lib/admin-mds'
+
 /**
  * Поле «Символ» раздела «Инструменты»: выбор из ДОСТУПА рабочего сайта
  * (пересечение вселенной MDS со списком instruments карточки сайта —
  * прокси /admin-mds/instruments фильтрует сам). При выборе автоматически
  * заполняются name/category/digits соседних полей строки.
- * MDS недоступен → обычный текстовый ввод (деградация без блокировки).
+ * Списка нет → обычный текстовый ввод (деградация без блокировки).
+ *
+ * Р-027: раньше здесь стояло `items.length > 0 ? items : null`, а подпись у
+ * текстового ввода была одна — «MDS недоступен». Пустой доступ сайта,
+ * невыбранный рабочий сайт и действительно мёртвый MDS давали одно и то же
+ * сообщение, причём два раза из трёх — неправду. Состояний теперь три, и
+ * подпись называет то, что произошло: чинятся они по-разному.
  */
 
 interface MdsInstrument {
@@ -25,17 +33,15 @@ export function MdsSymbolField({ path }: { path: string }) {
   const { value, setValue } = useField<string>({ path })
   const dispatchFields = useFormFields(([, dispatch]) => dispatch)
   const [items, setItems] = useState<MdsInstrument[] | null>(null)
+  const [failure, setFailure] = useState<MdsFailureReason | null>(null)
 
   useEffect(() => {
     let alive = true
-    fetch('/admin-mds/instruments')
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
-      .then((data: { items?: MdsInstrument[] }) => {
-        if (alive) setItems(Array.isArray(data.items) && data.items.length > 0 ? data.items : null)
-      })
-      .catch(() => {
-        if (alive) setItems(null)
-      })
+    loadMdsInstruments<MdsInstrument>('/admin-mds/instruments').then((result) => {
+      if (!alive) return
+      if (result.state === 'ok') setItems(result.items)
+      else setFailure(result.reason)
+    })
     return () => {
       alive = false
     }
@@ -81,7 +87,7 @@ export function MdsSymbolField({ path }: { path: string }) {
       <label style={{ display: 'block', marginBottom: '4px', fontSize: '13px' }}>
         Символ (из вселенной MDS)
       </label>
-      {items ? (
+      {items && items.length > 0 ? (
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           {/* Иконка выбранной монеты — из MDS через прокси CMS */}
           {value && items.find((i) => i.symbol === value)?.icon && (
@@ -129,8 +135,19 @@ export function MdsSymbolField({ path }: { path: string }) {
             placeholder="BTCUSD"
             style={inputStyle}
           />
-          <p style={{ margin: '4px 0 0', fontSize: '11px', color: 'var(--theme-elevation-400)' }}>
-            MDS недоступен — символ вводится вручную
+          <p
+            style={{
+              margin: '4px 0 0',
+              fontSize: '11px',
+              color: failure ? 'var(--theme-error-500, #d93025)' : 'var(--theme-elevation-400)',
+            }}
+          >
+            {failure
+              ? `${MDS_FAILURE_TEXT[failure]} Символ вводится вручную.`
+              : items
+                ? 'Сайту не разрешён ни один инструмент — добавьте их на карточке сайта. ' +
+                  'Символ вводится вручную.'
+                : 'Загрузка списка…'}
           </p>
         </>
       )}

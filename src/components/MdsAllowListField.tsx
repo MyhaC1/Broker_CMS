@@ -3,6 +3,8 @@
 import { useField } from '@payloadcms/ui'
 import React, { useEffect, useMemo, useState } from 'react'
 
+import { loadMdsInstruments, MDS_FAILURE_TEXT, type MdsFailureReason } from '@/lib/admin-mds'
+
 /**
  * Доступ сайта к инструментам (карточка сайта) — двухпанельный выбор,
  * рассчитанный на вселенную 2000+:
@@ -249,20 +251,19 @@ export function MdsAllowListField({ path }: { path: string }) {
   const { value, setValue } = useField<string[]>({ path })
   const selected = useMemo(() => new Set(Array.isArray(value) ? value : []), [value])
   const [universe, setUniverse] = useState<MdsInstrument[] | null>(null)
-  const [failed, setFailed] = useState(false)
+  // Р-027: отказ — это ПРИЧИНА, а не флаг. Раньше здесь стояло
+  // `items.length > 0 ? universe : failed`, то есть пустой ответ и мёртвый
+  // MDS попадали в одну ветку. Пустая вселенная при живом MDS — отдельное
+  // состояние, и выглядеть оно обязано иначе, чем отказ.
+  const [failure, setFailure] = useState<MdsFailureReason | null>(null)
 
   useEffect(() => {
     let alive = true
-    fetch('/admin-mds/instruments?all=1')
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
-      .then((data: { items?: MdsInstrument[] }) => {
-        if (!alive) return
-        if (Array.isArray(data.items) && data.items.length > 0) setUniverse(data.items)
-        else setFailed(true)
-      })
-      .catch(() => {
-        if (alive) setFailed(true)
-      })
+    loadMdsInstruments<MdsInstrument>('/admin-mds/instruments?all=1').then((result) => {
+      if (!alive) return
+      if (result.state === 'ok') setUniverse(result.items)
+      else setFailure(result.reason)
+    })
     return () => {
       alive = false
     }
@@ -313,12 +314,19 @@ export function MdsAllowListField({ path }: { path: string }) {
         Сайт получает котировки и может ставить на страницы только выбранное здесь.
       </p>
 
-      {failed && (
+      {failure && (
         <p style={{ fontSize: '12px', color: 'var(--theme-error-500, #d93025)' }}>
-          MDS недоступен — список показать нельзя, сохранённый выбор не изменится.
+          {MDS_FAILURE_TEXT[failure]} Сохранённый выбор не изменится.
         </p>
       )}
-      {!universe && !failed && (
+      {universe?.length === 0 && (
+        // Живой MDS с пустой вселенной — не отказ. Разные причины, разные
+        // действия: здесь чинить нечего, инструментов нет у источника.
+        <p style={{ fontSize: '12px', color: 'var(--theme-elevation-500)' }}>
+          MDS ответил, но вселенная инструментов пуста — выбирать не из чего.
+        </p>
+      )}
+      {!universe && !failure && (
         <p style={{ fontSize: '12px', color: 'var(--theme-elevation-400)' }}>Загрузка вселенной…</p>
       )}
 
@@ -329,7 +337,13 @@ export function MdsAllowListField({ path }: { path: string }) {
             items={available}
             groups={groupsOf(available)}
             providers={providersOf(available)}
-            emptyText={available.length === 0 ? 'Вся вселенная уже выбрана' : 'Ничего не найдено'}
+            emptyText={
+              universe.length === 0
+                ? 'Вселенная MDS пуста'
+                : available.length === 0
+                  ? 'Вся вселенная уже выбрана'
+                  : 'Ничего не найдено'
+            }
             actionLabel="+"
             onAction={(s) => add([s])}
             bulkLabel="Добавить все"
